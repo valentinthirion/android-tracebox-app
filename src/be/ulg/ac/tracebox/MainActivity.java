@@ -232,7 +232,7 @@ public class MainActivity extends Activity {
 			MyLocation myLocation = new MyLocation();
 			myLocation.getLocation(this, locationResult);
 
-			// Prepare the probe to be sended
+			// Prepare the probe to be sent
 			APIPoster poster = new APIPoster();
 			poster.addProbe(p);
 			if (poster.postProbes())
