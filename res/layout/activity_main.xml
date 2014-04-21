@@ -1,0 +1,162 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#3498db" >
+
+    <!-- <MENU> -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/destinations_button"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:paddingLeft="2dp"
+        	android:paddingRight="2dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginTop="5dp"
+        	android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:text="@string/main_destinations_button"
+            android:onClick="open_destinations_page"
+            android:background="#2c3e50"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/results_button"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:paddingLeft="2dp"
+        	android:paddingRight="2dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginTop="5dp"
+        	android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:text="@string/main_results_button"
+            android:onClick="open_results_page"
+            android:background="#2c3e50"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/installation_button"
+            android:layout_width="0dp"
+           	android:layout_height="50dp"
+            android:paddingLeft="2dp"
+        	android:paddingRight="2dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginTop="5dp"
+        	android:layout_marginBottom="5dp"
+            android:layout_weight="0.5"
+            android:onClick="open_installation_page"
+            android:text="@string/main_installation_not_installed_button"
+            android:background="#2c3e50"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/status_button"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:paddingLeft="2dp"
+        	android:paddingRight="2dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginTop="5dp"
+        	android:layout_marginBottom="5dp"
+            android:layout_weight="0.5"
+            android:text="@string/main_status_offline_button"
+            android:onClick="turn_probing_on_off"
+            android:background="#2c3e50"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+    <TextView
+        android:id="@+id/next_probe_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="@string/main_next_probe_title"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/instant_probe_button"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:paddingLeft="2dp"
+        	android:paddingRight="2dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginTop="5dp"
+        	android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:text="@string/main_instant_probe_button"
+            android:onClick="send_instant_probe"
+            android:background="#2c3e50"
+            android:textColor="#FFFFFF" />
+     </LinearLayout>
+
+     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/settings_button"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.5"
+            android:background="#2c3e50"
+            android:onClick="open_settings_page"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:src="@drawable/settings_button"
+            android:text="@string/main_settings_button"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/info_button"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="5"
+            android:background="#2c3e50"
+            android:onClick="show_about_page"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="@string/main_info_button"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+
+</LinearLayout>

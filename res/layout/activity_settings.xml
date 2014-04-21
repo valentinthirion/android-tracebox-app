@@ -1,0 +1,268 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#3498db" >
+
+    <TextView
+        android:id="@+id/settings_page_label"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="@string/settings_page_title"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#FFFFFF" />
+
+    <!-- STATUS -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/status_label"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:paddingLeft="2dp"
+        	android:paddingRight="2dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginTop="5dp"
+        	android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:text="@string/settings_status_title"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/settings_status_button"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:paddingLeft="2dp"
+        	android:paddingRight="2dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginTop="5dp"
+        	android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:text=""
+            android:background="#2c3e50"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+
+    <!-- FREQUENCY -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/frequency_label"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:paddingLeft="2dp"
+        	android:paddingRight="2dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginTop="5dp"
+        	android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:text="@string/settings_frequency_title"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/settings_frequency_button_minus"
+            android:layout_width="10dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.15"
+            android:background="#2c3e50"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="-"
+            android:textColor="#FFFFFF"
+            android:onClick="change_frequency_minus" />
+
+        <Button
+            android:id="@+id/settings_frequency_button"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="5dp"
+            android:background="#2c3e50"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text=""
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/settings_frequency_button_plus"
+            android:layout_width="10dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.15"
+            android:background="#2c3e50"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="+"
+            android:textColor="#FFFFFF"
+            android:onClick="change_frequency_plus" />
+
+    </LinearLayout>
+
+    <!-- # OF DEST -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/settings_number_of_destinations_label"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:paddingLeft="2dp"
+        	android:paddingRight="2dp"
+        	android:layout_marginRight="0dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginTop="5dp"
+        	android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:text="@string/settings_number_of_destinations_title"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/settings_number_of_destinations_button_minus"
+            android:layout_width="10dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.15"
+            android:background="#2c3e50"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="-"
+            android:textColor="#FFFFFF"
+            android:onClick="change_number_of_destinations_minus" />
+
+        <Button
+            android:id="@+id/settings_number_of_destinations_button"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="5dp"
+            android:background="#2c3e50"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text=""
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/settings_number_of_destinations_button_plus"
+            android:layout_width="10dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.15"
+            android:background="#2c3e50"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="+"
+            android:textColor="#FFFFFF"
+            android:onClick="change_number_of_destinations_plus" />
+
+    </LinearLayout>
+
+    <!-- MAX TIME -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/settings_max_duration_label"
+           android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:paddingLeft="2dp"
+        	android:paddingRight="2dp"
+        	android:layout_marginRight="5dp"
+        	android:layout_marginLeft="5dp"
+        	android:layout_marginTop="5dp"
+        	android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:text="@string/settings_max_duration_title"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/settings_max_duration_button_minus"
+            android:layout_width="10dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.15"
+            android:background="#2c3e50"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="-"
+            android:textColor="#FFFFFF"
+            android:onClick="change_max_duration_minus" />
+
+        <Button
+            android:id="@+id/settings_max_duration_button"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="5dp"
+            android:background="#2c3e50"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text=""
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/settings_max_duration_button_plus"
+            android:layout_width="10dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.15"
+            android:background="#2c3e50"
+            android:onClick="change_max_duration_plus"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="+"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+    
+
+</LinearLayout>

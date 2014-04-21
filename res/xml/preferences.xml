@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Probe settings -->
+    <item type="integer" name="frequency">10</item>
+    <item type="integer" name="nbOfDestinations">10</item>
+    <item type="integer" name="maxDuration">5</item>
+
+    <!-- Internal data -->
+    <item type="integer" name="busyboxVersion">0</item>
+    <item type="integer" name="busyboxInstalled">0</item>
+    <item type="integer" name="rootedDevice">0</item>
+    
+</resources>

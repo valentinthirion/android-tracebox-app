@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="be.ulg.ac.tracebox"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="18" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/main_app_name"
+        android:theme="@style/AppTheme" >
+
+        <!-- Main menu -->
+        <activity
+            android:name="be.ulg.ac.tracebox.MainActivity"
+            android:label="@string/main_app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Installation menu -->
+        <activity
+            android:name="be.ulg.ac.tracebox.InstallationActivity"
+            android:label="@string/main_app_name" >
+            <intent-filter>
+            </intent-filter>
+        </activity>
+
+        <!-- Settings page -->
+        <activity
+            android:name="be.ulg.ac.tracebox.SettingsActivity"
+            android:label="@string/main_app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="be.ulg.ac.tracebox.DestinationsActivity"
+            android:label="@string/title_activity_destinations" >
+        </activity>
+        <activity
+            android:name="be.ulg.ac.tracebox.ResultsActivity"
+            android:label="@string/title_activity_results" >
+        </activity>
+        <activity
+            android:name="be.ulg.ac.tracebox.AboutActivity"
+            android:label="@string/title_activity_about" >
+        </activity>
+    </application>
+
+</manifest>

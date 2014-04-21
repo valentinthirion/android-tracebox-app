@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="main_app_name">Tracebox</string>
+
+    <!-- INSTALLATION PAGE -->
+    <string name="installation_title">Installation of Tracebox</string>
+    <string name="installation_subtitle">Installation</string>
+    <string name="installation_text">This app requires your device to be rooted and install a special version of busybox.</string>
+    <string name="installation_root_title">Is you device rooted?</string>
+    <string name="installation_root_button">TEST</string>
+    <string name="installation_busybox_button">Install busybox with tracebox</string>
+    <string name="installation_status_text">Status:\n</string>
+    <string name="installation_confirmation_button">OK, let\'s find boxes</string>
+
+    <!-- Main menu -->
+    <string name="main_settings_button">Settings</string>
+    <string name="main_destinations_button">Destinations</string>
+    <string name="main_results_button">Results</string>
+    <string name="main_installation_not_installed_button">Not installed</string>
+    <string name="main_installation_installed_button">Installed</string>
+    <string name="main_status_label">Status: </string>
+    <string name="main_status_offline_button">OFFLINE</string>
+    <string name="main_status_online_button">ONLINE</string>
+    <string name="main_next_probe_title">Next probe in: </string>
+    <string name="main_on_off_button">Turn ON probing</string>
+    <string name="main_instant_probe_button">Instant probe</string>
+    <string name="main_info_button">About</string>
+
+    <!-- Settings page -->
+    <string name="settings_page_title">Settings</string>
+    <string name="settings_status_title">Status: </string>
+    <string name="settings_frequency_title">Frequency: </string>
+    <string name="settings_number_of_destinations_title"># of destinations: </string>
+    <string name="settings_max_duration_title">Max duration: </string>
+
+    <!-- Destinations page -->
+    <string name="destinations_page_title">Destinations</string>
+    <string name="destinations_page_add_placeholder">New destination</string>
+    <string name="destinations_page_add_button">ADD</string>
+    <string name="destinations_number"># of destinations: </string>
+    <string name="destinations_page_about_destinations_button">\?</string>
+
+    <!-- Results page -->
+    <string name="results_page_title">Results</string>
+    <string name="results_middleboxes_button">Middleboxes</string>
+    <string name="results_logs_button">Logs</string>
+
+    <!-- Settings stuff -->
+    <string name="preferences_file">res/xml/preferences.xml</string> 
+
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_destinations">DestinationsActivity</string>
+    <string name="title_activity_results">ResultsActivity</string>
+    <string name="title_activity_about">AboutActivity</string>
+
+</resources>
