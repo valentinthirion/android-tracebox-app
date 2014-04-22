@@ -18,7 +18,8 @@ public class Router {
 		for (int i = 0; i < splitted.length; i++)
 		{
 			if (!splitted[i].equals(""))
-				modifications.add(new PacketModification(splitted[i]));
+				if (splitted[i].contains("::"))
+					modifications.add(new PacketModification(splitted[i]));
 		}
 	}
 

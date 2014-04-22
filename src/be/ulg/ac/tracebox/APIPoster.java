@@ -1,11 +1,24 @@
 package be.ulg.ac.tracebox;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Vector;
 
-import be.ulg.ac.tracebox.data.*;
+import be.ulg.ac.tracebox.data.PacketModification;
+import be.ulg.ac.tracebox.data.Probe;
+import be.ulg.ac.tracebox.data.Router;
 
 public class APIPoster {
 	private Vector<Probe> probes;
+	private String postData;
+	private String postURL = "http://www.medineo.be/be.ac.ulg.androidtracebox/api/putProbes.php";
 
 	public APIPoster()
 	{
@@ -17,10 +30,31 @@ public class APIPoster {
 		probes.add(p);
 	}
 
-	public boolean postProbes()
+	public boolean saveProbesAsXMLFile(String name)
 	{
+		// Get the XML representation
 		String postData = getPostXML();
-		System.out.println(postData);
+
+		// Write the XML in a txt file
+		try {
+			  
+			File file = new File("/data/data/be.ulg.ac.tracebox/" + name);
+ 
+			// if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+ 
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(postData);
+			bw.close();
+ 
+			System.out.println("Written	");
+ 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		return true;
 	}
@@ -58,8 +92,57 @@ public class APIPoster {
 		}
 
 		builder.append("</xml>");
+		builder.append("\n");
+
+		postData = builder.toString();
 		
-		return builder.toString();
+		return postData;
 	}
 
+
+	public boolean tryToPostData()
+	{
+		// Get the XML representation
+		String postData = getPostXML();
+		System.out.println(postData);
+
+		HttpURLConnection connection;
+	    OutputStreamWriter request = null;
+
+	    URL url = null;   
+	    String response = null;         
+	    String parameters = "probeData=" + this.postData;
+
+	    try
+        {
+            url = new URL(postURL);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestMethod("POST");
+
+            request = new OutputStreamWriter(connection.getOutputStream());
+            request.write(parameters);
+            request.flush();
+            request.close();            
+            String line = "";
+
+            InputStreamReader isr = new InputStreamReader(connection.getInputStream());
+            BufferedReader reader = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            while ((line = reader.readLine()) != null)
+                sb.append(line + "\n");
+
+            response = sb.toString();
+            System.out.println("Message from Server: " + response);             
+            isr.close();
+            reader.close();
+
+            return response.contains("1");
+
+        } catch(IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+	}
 }

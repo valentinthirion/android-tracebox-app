@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
 
 	private boolean installed = false;
 	private boolean probing = false;
+	private boolean instantProbing = false;
 	
 	private SharedPreferences sharedpreferences;
 	private Editor editor;
@@ -101,18 +102,30 @@ public class MainActivity extends Activity {
 			instantProbeButton.setBackgroundColor(Color.argb(255, 231, 76, 60)); // FLAT RED
 		}
 
+		if (instantProbing)
+		{
+			instantProbeButton.setEnabled(false);
+			instantProbeButton.setBackgroundColor(Color.argb(255, 230, 126, 34)); // FLAT ORANGE
+			nextProbeTitle.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			instantProbeButton.setText(R.string.main_instant_probe_button);
+			instantProbeButton.setEnabled(true);
+			instantProbeButton.setBackgroundColor(Color.argb(255, 46, 204, 113)); // FLAT GREEN
+		}
+
 		if (this.probing)
 		{
 			statusButton.setBackgroundColor(Color.argb(255, 46, 204, 113)); // FLAT GREEN
 			statusButton.setText(R.string.main_status_online_button);
-			nextProbeTitle.setVisibility(View.VISIBLE);
 		}
 		else
 		{
 			statusButton.setBackgroundColor(Color.argb(255, 231, 76, 60)); // FLAT RED
 			statusButton.setText(R.string.main_status_offline_button);
 			nextProbeTitle.setVisibility(View.INVISIBLE);
-		}	
+		}
 	}
 
 	/*
@@ -172,12 +185,13 @@ public class MainActivity extends Activity {
 	{
 		if (Utilities.isConnected(this))
 		{
-			instantProbeButton.setEnabled(false);
-			instantProbeButton.setBackgroundColor(Color.argb(255, 230, 126, 34)); // FLAT ORANGE
+			instantProbing = true;
+
 			try {
 				DatabaseHandler db = new DatabaseHandler(this);
 
 				Destination randomDestination = db.getRandomDestination();
+				instantProbeButton.setText("Probing: " + randomDestination.getName());
 
 				// Show message
 				new AlertDialog.Builder(this)
@@ -215,8 +229,8 @@ public class MainActivity extends Activity {
 	{
 		Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		v.vibrate(500); // Vibrate for 500 milliseconds
-		instantProbeButton.setEnabled(true);
-		instantProbeButton.setBackgroundColor(Color.argb(255, 46, 204, 113)); // FLAT GREEN
+		instantProbing = false;
+		this.drawView();
 
 		if (p != null)
 		{
@@ -235,32 +249,25 @@ public class MainActivity extends Activity {
 			// Prepare the probe to be sent
 			APIPoster poster = new APIPoster();
 			poster.addProbe(p);
-			if (poster.postProbes())
+
+			// Save AS XML file
+			if (poster.saveProbesAsXMLFile("out.xml"))
 			{
-				new AlertDialog.Builder(this)
-			    .setTitle("Great")
-			    .setMessage("You just probed " + p.getDestination().getName() + ", the result has been stored and will be used for statistics. Thanks.")
-			    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-			        public void onClick(DialogInterface dialog, int which) { 
-			            // continue with delete
-			        }
-			     })
-			     .show();
+				ProbePoster instantPoster = new ProbePoster(poster);
+				instantPoster.execute();
 			}
 			else
-				showErrorAfterInstandProbe();
-
-			
+				showDialogBox("ERROR", "The probe could not be saved, try again later.");
 		}
 		else
-			showErrorAfterInstandProbe();
+			showDialogBox("ERROR", "There was an error while the probing. Sorry.");
 	}
 
-	private void showErrorAfterInstandProbe()
+	private void showDialogBox(String title, String message)
 	{
 		new AlertDialog.Builder(this)
-	    .setTitle("Error")
-	    .setMessage("There was an error while the probing.")
+	    .setTitle(title)
+	    .setMessage(message)
 	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int which) { 
 	            // continue with delete
@@ -297,7 +304,6 @@ public class MainActivity extends Activity {
 		{
 			TraceboxUtility tracebox = new TraceboxUtility(dest);
 			newProbe = tracebox.doTracebox();
-			//newProbe = new Probe(dest);
 			return null;
 		}
 
@@ -305,6 +311,34 @@ public class MainActivity extends Activity {
 		protected void onPostExecute(Long result)
 		{
 			endInstantProbe(newProbe);				
+		}
+	}
+
+	private class ProbePoster extends AsyncTask<URL, Integer, Long>
+	{
+		private APIPoster poster;
+		private boolean postOK = false;
+
+		public ProbePoster (APIPoster p)
+		{
+	        super();
+	        poster = p;
+	    }
+
+		@Override
+		protected Long doInBackground(URL... params)
+		{
+			postOK = poster.tryToPostData();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Long result)
+		{
+			if (postOK)
+				showDialogBox("Great", "Your probe has been submitted to the server and will be used for statistics, thank you.");
+			else
+				showDialogBox("ERROR", "There was an error while posting the data on the server. Please, try again later");
 		}
 	}
 }
