@@ -62,7 +62,7 @@ public class SettingsActivity extends Activity {
 		frequencyButton.setText(frequency + "/day");
 
 		// # of destinations
-		numberOfDestinations = sharedpreferences.getInt("numberOfDestinations", 10);
+		numberOfDestinations = sharedpreferences.getInt("numberOfDestinations", 5);
 		Button numberOfDestinationsButton = (Button) this.findViewById(R.id.settings_number_of_destinations_button);
 		numberOfDestinationsButton.setText(numberOfDestinations + " dest");
 

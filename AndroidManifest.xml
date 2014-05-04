@@ -22,7 +22,8 @@
         <!-- Main menu -->
         <activity
             android:name="be.ulg.ac.tracebox.MainActivity"
-            android:label="@string/main_app_name" >
+            android:label="@string/main_app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,7 +33,8 @@
         <!-- Installation menu -->
         <activity
             android:name="be.ulg.ac.tracebox.InstallationActivity"
-            android:label="@string/main_app_name" >
+            android:label="@string/main_app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
             </intent-filter>
         </activity>
@@ -40,25 +42,27 @@
         <!-- Settings page -->
         <activity
             android:name="be.ulg.ac.tracebox.SettingsActivity"
-            android:label="@string/main_app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:label="@string/main_app_name"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="be.ulg.ac.tracebox.DestinationsActivity"
-            android:label="@string/title_activity_destinations" >
+            android:label="@string/title_activity_destinations"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="be.ulg.ac.tracebox.ResultsActivity"
-            android:label="@string/title_activity_results" >
+            android:label="@string/title_activity_results" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="be.ulg.ac.tracebox.AboutActivity"
-            android:label="@string/title_activity_about" >
+            android:label="@string/title_activity_about"
+            android:screenOrientation="portrait" >
         </activity>
+
+        <!-- Background task -->
+        <service android:name="be.ulg.ac.tracebox.core.TraceboxBackgroundService" />
     </application>
 
 </manifest>

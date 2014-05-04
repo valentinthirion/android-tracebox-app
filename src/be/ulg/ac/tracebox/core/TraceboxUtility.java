@@ -57,8 +57,16 @@ public class TraceboxUtility
 					continue;
 				else
 				{
-					ttl = Integer.parseInt(line[j]);
-					break;
+					try {
+						ttl = Integer.parseInt(line[j]);
+						break;
+					}
+					catch (NumberFormatException e)
+					{
+						e.printStackTrace();
+						break;
+					}
+
 				}
 			}
 

@@ -1,9 +1,12 @@
 package be.ulg.ac.tracebox;
 
 import java.net.URL;
+import java.util.Calendar;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,8 +23,13 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import be.ulg.ac.tracebox.MyLocation.LocationResult;
+import android.widget.Toast;
+import be.ulg.ac.tracebox.core.APIPoster;
+import be.ulg.ac.tracebox.core.MyLocation;
+import be.ulg.ac.tracebox.core.TraceboxBackgroundService;
 import be.ulg.ac.tracebox.core.TraceboxUtility;
+import be.ulg.ac.tracebox.core.MiscUtilities;
+import be.ulg.ac.tracebox.core.MyLocation.LocationResult;
 import be.ulg.ac.tracebox.data.DatabaseHandler;
 import be.ulg.ac.tracebox.data.Destination;
 import be.ulg.ac.tracebox.data.Probe;
@@ -37,6 +45,8 @@ public class MainActivity extends Activity {
 
 	private Button instantProbeButton;
 	private TextView nextProbeTitle;
+
+	private AlarmManager alarm;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -90,7 +100,7 @@ public class MainActivity extends Activity {
 			installationButton.setText(R.string.main_installation_installed_button);
 			statusButton.setEnabled(true);
 			instantProbeButton.setEnabled(true);
-			if (Utilities.isConnected(this))
+			if (MiscUtilities.isConnected(this))
 				instantProbeButton.setBackgroundColor(Color.argb(255, 46, 204, 113)); // FLAT GREEN
 			else
 				instantProbeButton.setBackgroundColor(Color.argb(255, 231, 76, 60)); // FLAT RED
@@ -151,7 +161,7 @@ public class MainActivity extends Activity {
 
 	public void open_installation_page(View view)
 	{
-		if (Utilities.isConnected(this))
+		if (MiscUtilities.isConnected(this))
 		{
 			Intent installationItent = new Intent(this, InstallationActivity.class);
 			startActivity(installationItent);
@@ -163,11 +173,26 @@ public class MainActivity extends Activity {
 		if (probing)
 		{
 			System.out.println("TURN PROBING OFF");
+
+			Intent intent = new Intent(this, TraceboxBackgroundService.class);
+			//stopService(intent);
+			PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
+			alarm.cancel(pintent);
+
 			editor.putBoolean("probingEnabled", false);
 		}
 		else
 		{
 			System.out.println("TURN PROBING ON");
+
+			int interval = (24 * 3600 / sharedpreferences.getInt("frequency", 10));
+			int maxDuration = 0;
+			//int numberOfDestinations = 0;
+			alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+
+			TraceboxerBackgroundProbe backgroundProber = new TraceboxerBackgroundProbe(this, alarm, interval, maxDuration);
+			backgroundProber.execute();
+
 			editor.putBoolean("probingEnabled", true);
 		}
 
@@ -183,7 +208,7 @@ public class MainActivity extends Activity {
 
 	public void send_instant_probe(View view)
 	{
-		if (Utilities.isConnected(this))
+		if (MiscUtilities.isConnected(this))
 		{
 			instantProbing = true;
 
@@ -235,7 +260,7 @@ public class MainActivity extends Activity {
 		if (p != null)
 		{
 			// SAVE THIS PROBE AND SEND IT TO THE SERVER
-			p.setConnectivityMode(Utilities.getConnectivityType(this)); // Save the connectivityMode
+			p.setConnectivityMode(MiscUtilities.getConnectivityType(this)); // Save the connectivityMode
 			
 			LocationResult locationResult = new LocationResult(){
 			    @Override
@@ -339,6 +364,35 @@ public class MainActivity extends Activity {
 				showDialogBox("Great", "Your probe has been submitted to the server and will be used for statistics, thank you.");
 			else
 				showDialogBox("ERROR", "There was an error while posting the data on the server. Please, try again later");
+		}
+	}
+
+	private class TraceboxerBackgroundProbe extends AsyncTask<URL, Integer, Long>
+	{
+		private Context context;
+		private Calendar cal;
+		private AlarmManager alarm;
+		int interval;
+		int maxDuration;
+
+		public TraceboxerBackgroundProbe (Context c, AlarmManager a, int i, int m)
+		{
+	        super();
+	        context = c;
+	        alarm = a;
+	        interval = i;
+	        maxDuration = m;
+	        cal = Calendar.getInstance();
+	    }
+
+		@Override
+		protected Long doInBackground(URL... params)
+		{
+			Intent intent = new Intent(context, TraceboxBackgroundService.class);
+			PendingIntent pintent = PendingIntent.getService(context, 0, intent, 0);
+
+			alarm.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), interval * 1000, pintent);
+			return null;
 		}
 	}
 }

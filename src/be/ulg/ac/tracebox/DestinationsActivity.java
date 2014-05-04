@@ -5,6 +5,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Vector;
 
+import be.ulg.ac.tracebox.core.MiscUtilities;
 import be.ulg.ac.tracebox.data.DatabaseHandler;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -85,7 +86,7 @@ public class DestinationsActivity extends Activity {
 	}
 	public void add_custom_destination(View view)
 	{
-		if (Utilities.isConnected(this))
+		if (MiscUtilities.isConnected(this))
 		{
 			newDestinationResolver getter = (newDestinationResolver) new newDestinationResolver().execute();
 		}

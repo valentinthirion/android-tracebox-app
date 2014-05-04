@@ -2,6 +2,7 @@ package be.ulg.ac.tracebox.data;
 
 import android.database.Cursor;
 
+import java.util.Date;
 import java.util.Random;
 import java.util.Vector;
 
@@ -32,6 +33,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_NAME = "name";
     private static final String KEY_ADDRESS = "address";
     private static final String KEY_CUSTOM_DESTINATION = "custom_destination";
+    private static final String KEY_CONNECTIVITY_MODE = "connectivity_mode";
+    private static final String KEY_LATITUDE = "latitude";
+    private static final String KEY_LONGITUDE = "longitude";
+    private static final String KEY_DESTINATION_ID = "destination";
+    private static final String KEY_STARTDATE = "startDate";
+    private static final String KEY_ENDDATE = "endDate";
+    private static final String KEY_TTL = "ttl";
+    private static final String KEY_PROBE_ID = "probe_id";
+    private static final String KEY_ROUTER_ID = "router_id";
+    private static final String KEY_LAYER = "layer";
+    private static final String KEY_FIELD = "field";
+    
 
     // Logs Table Columns names
     private static final String KEY_MESSAGE = "message";
@@ -57,8 +70,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_LOGS_TABLE = "CREATE TABLE " + TABLE_LOGS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_MESSAGE + " TEXT,"
                 + KEY_DATE + " TEXT" +  ")";
-
         db.execSQL(CREATE_LOGS_TABLE);
+
+        // Probes
+        String CREATE_PROBES_TABLE = "CREATE TABLE " + TABLE_PROBES + "("
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CONNECTIVITY_MODE + " INT,"
+                + KEY_LATITUDE + " DOUBLE, " + KEY_LONGITUDE + " DOUBLE,"
+                + KEY_DESTINATION_ID + " INT, "
+                + KEY_STARTDATE + " TEXT, " + KEY_ENDDATE + " TEXT)";
+        db.execSQL(CREATE_PROBES_TABLE);
+
+        // Routers
+        String CREATE_ROUTERS_TABLE = "CREATE TABLE " + TABLE_ROUTERS + "("
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CONNECTIVITY_MODE + " INT,"
+                + KEY_PROBE_ID + " INT"
+                + KEY_ADDRESS + " TEXT, "
+                + KEY_TTL + " INT)";
+        db.execSQL(CREATE_ROUTERS_TABLE);
+
+        // Packet modifications
+        String CREATE_PACKETMODIFICATIONS_TABLE = "CREATE TABLE " + TABLE_PACKETMODIFICATIONS + "("
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CONNECTIVITY_MODE + " INT,"
+                + KEY_ROUTER_ID + " INT, "
+                + KEY_LAYER + " TEXT,"
+                + KEY_FIELD + " TEXT)";
+        db.execSQL(CREATE_PACKETMODIFICATIONS_TABLE);
     }
  
     // Upgrading database
@@ -68,6 +104,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	// Drop older destinations table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DESTINATIONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROBES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROUTERS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PACKETMODIFICATIONS);
  
         // Create tables again
         onCreate(db);
@@ -151,7 +190,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public Destination getRandomDestination()
     {
     	Random rand = new Random();
-	    int num = rand.nextInt(500) + 1;
+	    int num = rand.nextInt(getNumberOfDestinations()) + 1;
 		return this.getDestination(num);
     }
 
@@ -216,5 +255,74 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	SQLiteDatabase db = this.getWritableDatabase();
     	db.delete(TABLE_LOGS, null, null);
     	db.close(); // Closing database connection
+    }
+
+    //---------- PROBES ------------
+    public void addProbe(Probe p)
+    {
+    	SQLiteDatabase db = this.getWritableDatabase();
+
+    	/*
+    	 * String CREATE_PROBES_TABLE = "CREATE TABLE " + TABLE_PROBES + "("
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CONNECTIVITY_MODE + " INT,"
+                + KEY_LATITUDE + " DOUBLE, " + KEY_LONGITUDE + " DOUBLE,"
+                + KEY_DESTINATION_ID + " INT, "
+                + KEY_STARTDATE + " INT, " + KEY_ENDDATE + " INT)";
+        db.execSQL(CREATE_PROBES_TABLE);
+    	 */
+        
+        ContentValues values = new ContentValues();
+        values.put(KEY_ID, p.getId());
+        values.put(KEY_CONNECTIVITY_MODE, p.getConnectivityMode());
+        values.put(KEY_LATITUDE, p.getLatitude()); // Date
+        values.put(KEY_LATITUDE, p.getLongitude()); // Date
+        values.put(KEY_DESTINATION_ID, p.getDestination().getId()); // Date
+        values.put(KEY_STARTDATE, p.getStartDate().toString()); // Date
+        values.put(KEY_ENDDATE, p.getEndDate().toString()); // Date
+        
+
+        // Inserting Row
+        db.insert(TABLE_PROBES, null, values);
+        db.close(); // Closing database connection
+    }
+
+    public Probe getProbe(int id)
+    {
+    	SQLiteDatabase db = this.getReadableDatabase();
+    	 
+        Cursor cursor = db.query(TABLE_DESTINATIONS, new String[] { KEY_ID,
+                KEY_NAME, KEY_ADDRESS, KEY_CUSTOM_DESTINATION }, KEY_ID + "=?",
+                new String[] { String.valueOf(id) }, null, null, null, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        Destination d = getDestination(Integer.parseInt(cursor.getString(4)));
+ 
+        Probe newProbe = new Probe(d);
+        newProbe.setConnectivityMode(Integer.parseInt(cursor.getString(1)));
+        newProbe.setLatitude(Integer.parseInt(cursor.getString(2)));
+        newProbe.setLongitude(Integer.parseInt(cursor.getString(3)));
+        //newProbe.setStartDate(new Date(cursor.getString(4)));
+        //newProbe.setEndDate(new Date(cursor.getString(3)));
+        cursor.close();
+
+    	return newProbe;
+    }
+
+    public Vector<Probe> getProbesForDestination(Destination d)
+    {
+    	int destinationID = d.getId();
+
+    	Vector<Probe> probes = new Vector<Probe>();
+    	
+
+    	return probes;
+    }
+
+    public Vector<Probe> getAllProbes()
+    {
+    	Vector<Probe> probes = new Vector<Probe>();
+
+    	return probes;
     }
 }
