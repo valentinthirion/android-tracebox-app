@@ -16,15 +16,10 @@ public class Log {
 		setDate(new Date());
 	}
 
-	public Log(String m, String d)
+	public Log(String m, long d)
 	{
 		setMessage(m);
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy h:i"); 
-	    try {
-	        date = df.parse(d);
-	    } catch (ParseException e) {
-	        e.printStackTrace();
-	    }
+		setDate(new Date(d));
 	}
 
 	public String getMessage() {

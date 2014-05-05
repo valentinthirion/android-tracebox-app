@@ -59,11 +59,16 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/results_list"
-        android:layout_width="match_parent"
-        android:layout_height="357dp"
-        android:background="#FFFFFF" >
-    </ListView>
+    <ScrollView
+    	android:layout_width="fill_parent"
+    	android:layout_height="276dp"
+    	android:layout_weight="1">
+    	<TableLayout
+	        android:id="@+id/results_table"
+        	android:layout_width="fill_parent"
+        	android:layout_height="fill_parent"
+        	android:background="#3498db" >
+    	</TableLayout>
+    </ScrollView>
     
 </LinearLayout>

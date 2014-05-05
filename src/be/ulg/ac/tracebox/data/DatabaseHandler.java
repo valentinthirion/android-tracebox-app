@@ -23,29 +23,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Table names
     private static final String TABLE_DESTINATIONS = "destinations";
     private static final String TABLE_PROBES = "probes";
-    private static final String TABLE_ROUTERS = "routers";
-    private static final String TABLE_PACKETMODIFICATIONS = "packetmodifications";
     private static final String TABLE_LOGS = "logs";
  
+    // For all
     private static final String KEY_ID = "id";
-
     // Destinations Table Columns names
     private static final String KEY_NAME = "name";
     private static final String KEY_ADDRESS = "address";
     private static final String KEY_CUSTOM_DESTINATION = "custom_destination";
+    // Probes table
     private static final String KEY_CONNECTIVITY_MODE = "connectivity_mode";
-    private static final String KEY_LATITUDE = "latitude";
-    private static final String KEY_LONGITUDE = "longitude";
-    private static final String KEY_DESTINATION_ID = "destination";
-    private static final String KEY_STARTDATE = "startDate";
-    private static final String KEY_ENDDATE = "endDate";
-    private static final String KEY_TTL = "ttl";
-    private static final String KEY_PROBE_ID = "probe_id";
-    private static final String KEY_ROUTER_ID = "router_id";
-    private static final String KEY_LAYER = "layer";
-    private static final String KEY_FIELD = "field";
-    
-
+    private static final String KEY_DESTINATION_ID = "destination_id";
+    private static final String KEY_PROBE_DATE = "date";
+    private static final String KEY_NB_HOPS = "nb_hops";
+    private static final String KEY_NB_PM = "nb_pm";
     // Logs Table Columns names
     private static final String KEY_MESSAGE = "message";
     private static final String KEY_DATE = "date";
@@ -62,39 +53,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_DESTINATIONS_TABLE = "CREATE TABLE " + TABLE_DESTINATIONS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
                 + KEY_ADDRESS + " TEXT,"
-                + KEY_CUSTOM_DESTINATION + " INT" +  ")";
-
+                + KEY_CUSTOM_DESTINATION + " INT)";
         db.execSQL(CREATE_DESTINATIONS_TABLE);
-
-        // Logs
-        String CREATE_LOGS_TABLE = "CREATE TABLE " + TABLE_LOGS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_MESSAGE + " TEXT,"
-                + KEY_DATE + " TEXT" +  ")";
-        db.execSQL(CREATE_LOGS_TABLE);
 
         // Probes
         String CREATE_PROBES_TABLE = "CREATE TABLE " + TABLE_PROBES + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CONNECTIVITY_MODE + " INT,"
-                + KEY_LATITUDE + " DOUBLE, " + KEY_LONGITUDE + " DOUBLE,"
                 + KEY_DESTINATION_ID + " INT, "
-                + KEY_STARTDATE + " TEXT, " + KEY_ENDDATE + " TEXT)";
+                + KEY_PROBE_DATE + " LONGINT, "
+                + KEY_NB_HOPS + " INT, "
+                + KEY_NB_PM + " INT)";
         db.execSQL(CREATE_PROBES_TABLE);
 
-        // Routers
-        String CREATE_ROUTERS_TABLE = "CREATE TABLE " + TABLE_ROUTERS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CONNECTIVITY_MODE + " INT,"
-                + KEY_PROBE_ID + " INT"
-                + KEY_ADDRESS + " TEXT, "
-                + KEY_TTL + " INT)";
-        db.execSQL(CREATE_ROUTERS_TABLE);
-
-        // Packet modifications
-        String CREATE_PACKETMODIFICATIONS_TABLE = "CREATE TABLE " + TABLE_PACKETMODIFICATIONS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CONNECTIVITY_MODE + " INT,"
-                + KEY_ROUTER_ID + " INT, "
-                + KEY_LAYER + " TEXT,"
-                + KEY_FIELD + " TEXT)";
-        db.execSQL(CREATE_PACKETMODIFICATIONS_TABLE);
+        // Logs
+        String CREATE_LOGS_TABLE = "CREATE TABLE " + TABLE_LOGS + "("
+                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_MESSAGE + " TEXT,"
+                + KEY_DATE + " LONGINT)";
+        db.execSQL(CREATE_LOGS_TABLE);
     }
  
     // Upgrading database
@@ -103,10 +78,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         
     	// Drop older destinations table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DESTINATIONS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROBES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROUTERS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PACKETMODIFICATIONS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGS);
  
         // Create tables again
         onCreate(db);
@@ -159,15 +132,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return destinations;
     }
 
+    // Get the number of stored destinations
     public int getNumberOfDestinations()
     {
     	String countQuery = "SELECT * FROM " + TABLE_DESTINATIONS;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
+        int c = cursor.getCount();
         cursor.close();
  
-        return cursor.getCount();
+        return c;
     }
+
     // Get a destination by id
     public Destination getDestination(int id)
     {
@@ -209,77 +185,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	db.delete(TABLE_DESTINATIONS, null, null);
     	db.close(); // Closing database connection
     }
-    
-    //---------- LOGS ------------
-    // Adding new log
-    public void addLog(Log l) {
-        SQLiteDatabase db = this.getWritableDatabase();
-     
-        ContentValues values = new ContentValues();
-        values.put(KEY_MESSAGE, l.getMessage()); // Name
-        values.put(KEY_DATE, l.getDate().toString()); // Date
-
-        // Inserting Row
-        db.insert(TABLE_LOGS, null, values);
-        db.close(); // Closing database connection
-    }
-
-    // Get all destinations
-    public Vector<Log> getAllLogs()
-    {
-        Vector<Log> logs = new Vector<Log>();
-
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_LOGS;
-     
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-     
-        // looping through all rows and adding to list
-        if (((android.database.Cursor) cursor).moveToFirst()) {
-            do {
-            	Log currentLog;
-
-            	currentLog = new Log(cursor.getString(1), cursor.getString(2));
-            	logs.add(currentLog);
-            } while (cursor.moveToNext());
-        }
-     
-        db.close(); // Closing database connection
-        return logs;
-    }
-
-    // Delete all destinations
-    public void deleteAllLogs()
-    {
-    	SQLiteDatabase db = this.getWritableDatabase();
-    	db.delete(TABLE_LOGS, null, null);
-    	db.close(); // Closing database connection
-    }
 
     //---------- PROBES ------------
     public void addProbe(Probe p)
     {
     	SQLiteDatabase db = this.getWritableDatabase();
-
-    	/*
-    	 * String CREATE_PROBES_TABLE = "CREATE TABLE " + TABLE_PROBES + "("
-                + KEY_ID + " INTEGER PRIMARY KEY," + KEY_CONNECTIVITY_MODE + " INT,"
-                + KEY_LATITUDE + " DOUBLE, " + KEY_LONGITUDE + " DOUBLE,"
-                + KEY_DESTINATION_ID + " INT, "
-                + KEY_STARTDATE + " INT, " + KEY_ENDDATE + " INT)";
-        db.execSQL(CREATE_PROBES_TABLE);
-    	 */
         
         ContentValues values = new ContentValues();
-        values.put(KEY_ID, p.getId());
         values.put(KEY_CONNECTIVITY_MODE, p.getConnectivityMode());
-        values.put(KEY_LATITUDE, p.getLatitude()); // Date
-        values.put(KEY_LATITUDE, p.getLongitude()); // Date
         values.put(KEY_DESTINATION_ID, p.getDestination().getId()); // Date
-        values.put(KEY_STARTDATE, p.getStartDate().toString()); // Date
-        values.put(KEY_ENDDATE, p.getEndDate().toString()); // Date
-        
+        values.put(KEY_PROBE_DATE, p.getStartDate().getTime()); // Date
+        values.put(KEY_NB_HOPS, p.getRouters().size());
+        int nb_pm = 0;
+        for (Router r:p.getRouters())
+        {
+        	nb_pm += r.getPacketModifications().size();
+        }
+        values.put(KEY_NB_PM, nb_pm);
 
         // Inserting Row
         db.insert(TABLE_PROBES, null, values);
@@ -296,33 +218,92 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor != null)
             cursor.moveToFirst();
 
-        Destination d = getDestination(Integer.parseInt(cursor.getString(4)));
+        Destination d = getDestination(cursor.getInt(2));
  
         Probe newProbe = new Probe(d);
-        newProbe.setConnectivityMode(Integer.parseInt(cursor.getString(1)));
-        newProbe.setLatitude(Integer.parseInt(cursor.getString(2)));
-        newProbe.setLongitude(Integer.parseInt(cursor.getString(3)));
-        //newProbe.setStartDate(new Date(cursor.getString(4)));
-        //newProbe.setEndDate(new Date(cursor.getString(3)));
+        newProbe.setConnectivityMode(cursor.getInt(1));
+        Date date = new Date(cursor.getLong(3));
+        newProbe.setStartDate(date);
+        newProbe.setEndDate(date);
         cursor.close();
 
     	return newProbe;
     }
 
-    public Vector<Probe> getProbesForDestination(Destination d)
+    public Vector<String> getAllProbesInString()
     {
-    	int destinationID = d.getId();
+    	Vector<String> probes = new Vector<String>();
 
-    	Vector<Probe> probes = new Vector<Probe>();
-    	
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_PROBES + " ORDER BY " + KEY_PROBE_DATE + " DESC LIMIT 0, 100";
+     
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+     
+        // looping through all rows and adding to list
+        if (((android.database.Cursor) cursor).moveToFirst()) {
+            do {
+            	int d_id = cursor.getInt(2);
+            	Destination dest = this.getDestination(d_id);
+            	Date date = new Date(cursor.getLong(3));
+
+            	String s = new String(date.toString() + "\n"
+            						+ "Dest: " + dest.getName() + "\n"
+            						+ "Nb of hops: " + cursor.getInt(4) + "\n"
+            						+ "Nb of mods: " + cursor.getInt(5));
+            		
+                probes.add(s);
+            } while (cursor.moveToNext());
+        }
+     
+        db.close(); // Closing database connection
 
     	return probes;
     }
 
-    public Vector<Probe> getAllProbes()
-    {
-    	Vector<Probe> probes = new Vector<Probe>();
+    //---------- LOGS ------------
+    // Adding new log
+    public void addLog(Log l) {
+        SQLiteDatabase db = this.getWritableDatabase();
+     
+        ContentValues values = new ContentValues();
+        values.put(KEY_MESSAGE, l.getMessage()); // Name
+        values.put(KEY_DATE, l.getDate().getTime()); // Date
 
-    	return probes;
+        // Inserting Row
+        db.insert(TABLE_LOGS, null, values);
+        db.close(); // Closing database connection
+    }
+
+    // Get all destinations
+    public Vector<Log> getAllLogs()
+    {
+        Vector<Log> logs = new Vector<Log>();
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_LOGS + " ORDER BY " + KEY_DATE + " DESC LIMIT 0, 100";
+     
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+     
+        // looping through all rows and adding to list
+        if (((android.database.Cursor) cursor).moveToFirst()) {
+            do {
+            	Log currentLog;
+            	currentLog = new Log(cursor.getString(1), cursor.getLong(2));
+            	logs.add(currentLog);
+            } while (cursor.moveToNext());
+        }
+     
+        db.close(); // Closing database connection
+        return logs;
+    }
+
+    // Delete all destinations
+    public void deleteAllLogs()
+    {
+    	SQLiteDatabase db = this.getWritableDatabase();
+    	db.delete(TABLE_LOGS, null, null);
+    	db.close(); // Closing database connection
     }
 }

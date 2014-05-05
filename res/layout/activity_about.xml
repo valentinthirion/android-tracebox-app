@@ -6,11 +6,36 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".AboutActivity" >
+    tools:context=".AboutActivity"
+    android:background="#3498db" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="200dip"
+        android:layout_height="200dip"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_512x512" />
 
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_below="@+id/imageView1"
+        android:text="@string/about_text"
+        android:textColor="#FFFFFF" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="180dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#2c3e50"
+        android:onClick="visit_website"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:text="@string/about_website_button"
+        android:textColor="#FFFFFF" />
 
 </RelativeLayout>

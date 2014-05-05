@@ -38,7 +38,6 @@ public class TraceboxUtility
 			if (steps[i].contains("*"))
 				continue;
 
-			//System.out.println(steps[i]);
 			String[] line = steps[i].split("\\s+");
 
 			if (line.length < 3)
@@ -51,7 +50,6 @@ public class TraceboxUtility
 			// FIND THE TTL
 			for (int j = 0; j < line.length; j++)
 			{
-				//System.out.println("line[" + j + "]=" + line[j]);
 				k = j;
 				if (line[j].equals(""))
 					continue;
@@ -66,7 +64,6 @@ public class TraceboxUtility
 						e.printStackTrace();
 						break;
 					}
-
 				}
 			}
 

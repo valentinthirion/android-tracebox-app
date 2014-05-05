@@ -17,6 +17,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -44,6 +45,8 @@ public class InstallationActivity extends Activity {
 	private SharedPreferences sharedpreferences;
 	private Editor editor;
 	boolean downloading = false;
+	private ProgressDialog progressDialog;
+	private DatabaseHandler db;
 
 	public Vector<Destination> destinations = new Vector<Destination>();
 
@@ -52,6 +55,10 @@ public class InstallationActivity extends Activity {
 	{
 		super.onCreate(savedInstanceState);    
         setContentView(R.layout.installation_activity);
+
+        setTitle("Tracebox for Android - Installation");
+
+        db = new DatabaseHandler(this);
 
         // SET PREFERENCES STUFF
         sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -113,6 +120,9 @@ public class InstallationActivity extends Activity {
 			editor.commit();
 
 			this.showText("Device is rooted");
+
+			// Save log
+			db.addLog(new Log("Checked if device was rooted, result OK"));
 		}
 		else
 		{
@@ -135,6 +145,9 @@ public class InstallationActivity extends Activity {
 			editor.commit();
 
 			this.showText("Device is not rooted rooted");
+
+			// Save log
+			db.addLog(new Log("Checked if device was rooted, result NOK"));
 		}
 	}
 
@@ -143,13 +156,16 @@ public class InstallationActivity extends Activity {
 	{		
 		if (!deviceIsRooted)
 			return;
+
+		// Waiting box
+		progressDialog = ProgressDialog.show(
+                this, "Please wait",
+                "The busybox containing tracebox is being dowloaded and installed...\nThis could be long.", true);
+        progressDialog.setCancelable(false);
 		
 		// FIND BUSYBOX AND INSTALL IT
 		downloading = true;
 		busyboxButton.setEnabled(false);
-		busyboxIsInstalled = true;
-
-		editor.putBoolean("busyboxInstalled", true);
 
 		BusyboxGetter getter = (BusyboxGetter) new BusyboxGetter();
 		getter.execute();
@@ -159,7 +175,13 @@ public class InstallationActivity extends Activity {
 	{
 		if (ok)
 		{
+			editor.putBoolean("busyboxInstalled", true);
+			busyboxIsInstalled = true;
+
 			this.showText("Busybox is installed.");
+
+			// Save log
+			db.addLog(new Log("Installed Busybox"));
 			
 			getDestinations();
 			return;
@@ -190,10 +212,11 @@ public class InstallationActivity extends Activity {
 	// Save destinations to SQLite
 	private boolean saveDestinations()
 	{
+		progressDialog.cancel();
+
 		if (destinations.size() > 0)
 		{
 			// Save the destinations id DB
-			DatabaseHandler db = new DatabaseHandler(this);
 			db.deleteNonCustomDestinations();
 					
 			for (Destination d: destinations)
@@ -209,10 +232,14 @@ public class InstallationActivity extends Activity {
 			busyboxButton.setBackgroundColor(Color.argb(255, 46, 204, 113)); // FLAT GREEN
 			endInstallationButton.setBackgroundColor(Color.argb(255, 46, 204, 113)); // FLAT GREEN
 			endInstallationButton.setEnabled(true);
+
+			// Save log
+			db.addLog(new Log("Destinations got"));
 			return false;
 		}
 
 		this.showText("Error while getting destinations, try again.");
+
 		return true;
 	}
 
@@ -225,6 +252,9 @@ public class InstallationActivity extends Activity {
 		}
 		else
 		{
+			// Save log
+			db.addLog(new Log("Installation correctly ended"));
+						
 			System.out.println("GO GO WARRIORS!");
 			editor.putBoolean("systemInstalled", true);
 			editor.commit();
@@ -329,8 +359,7 @@ public class InstallationActivity extends Activity {
 
 		private void parseDestinations()
 		{
-			String APIPrefix = "http://www.medineo.be/be.ac.ulg.androidtracebox/api/";
-			String url = APIPrefix + "getDestinations.php";
+			String url = "http://www.medineo.be/be.ac.ulg.androidtracebox/api/getDestinations.php";
 			XmlPullParserFactory xmlFactoryObject = null;
 			XmlPullParser parser = null;
 

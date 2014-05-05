@@ -110,6 +110,7 @@
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:text="@string/destinations_page_about_destinations_button"
+            android:onClick="show_info_about_destinations"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 

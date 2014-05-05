@@ -1,5 +1,10 @@
 package be.ulg.ac.tracebox;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -28,10 +33,14 @@ public class DestinationsActivity extends Activity {
 	private TableLayout destinations_table;
 	private DatabaseHandler db;
 
+	private String postURL = "http://www.medineo.be/be.ac.ulg.androidtracebox/api/resolveURL.php";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_destinations);
+
+		setTitle("Tracebox for Android - Destinations");
 
 		newDestinationEditText = (EditText) findViewById(R.id.destinations_page_add_edittext);
 		destinations_table = (TableLayout) findViewById(R.id.destinations_table);
@@ -55,7 +64,7 @@ public class DestinationsActivity extends Activity {
 
 		for (Destination d:destinations)
 		{
-			TableRow tableRow= new TableRow(this);
+			TableRow tableRow = new TableRow(this);
 
 			TextView nameText = new TextView(this);
 			nameText.setText(d.getName());
@@ -102,7 +111,19 @@ public class DestinationsActivity extends Activity {
 		     })
 		     .show();
 		}
-			
+	}
+
+	public void show_info_about_destinations(View view)
+	{
+		new AlertDialog.Builder(this)
+	    .setTitle("About the destinations")
+	    .setMessage("The pre-set destinations are got from the Backoffice. The list contains the TOP500 Alexa.\nYou can add a custom one, that will be used for future tests.")
+	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	            // continue with delete
+	        }
+	     })
+	     .show();
 	}
 
 	private class newDestinationResolver extends AsyncTask<URL, Integer, Long>
@@ -148,7 +169,50 @@ public class DestinationsActivity extends Activity {
 
 				if (!exists)
 				{
-					InetAddress address = null;
+					// Do the resolver online from the BO
+					HttpURLConnection connection;
+				    OutputStreamWriter request = null;
+
+				    URL url = null;   
+				    String response = null;         
+				    String parameters = "url=" +  newDestination;
+
+				    try
+			        {
+			            url = new URL(postURL);
+			            connection = (HttpURLConnection) url.openConnection();
+			            connection.setDoOutput(true);
+			            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			            connection.setRequestMethod("POST");
+
+			            request = new OutputStreamWriter(connection.getOutputStream());
+			            request.write(parameters);
+			            request.flush();
+			            request.close();            
+			            String line = "";
+
+			            InputStreamReader isr = new InputStreamReader(connection.getInputStream());
+			            BufferedReader reader = new BufferedReader(isr);
+			            StringBuilder sb = new StringBuilder();
+			            while ((line = reader.readLine()) != null)
+			                sb.append(line + "\n");
+
+			            response = sb.toString();
+			            System.out.println("Message from Server: " + response);             
+			            isr.close();
+			            reader.close();
+
+			            if(response.contains("-1"))
+			            	return null;
+			            else
+			            	return response;
+
+			        } catch(IOException e) {
+			            e.printStackTrace();
+			            return null;
+			        }
+
+					/*InetAddress address = null;
 					try {
 						address = InetAddress.getByName(newDestination);
 					} catch (UnknownHostException e) {
@@ -161,6 +225,7 @@ public class DestinationsActivity extends Activity {
 						addressString = addressString.substring(addressString.indexOf("/") + 1, addressString.length());
 						return addressString;
 					}
+					*/
 				}
 			}
 			return null;

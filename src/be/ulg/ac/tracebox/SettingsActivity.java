@@ -26,6 +26,8 @@ public class SettingsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 
+		setTitle("Tracebox for Android - Settings");
+
 		// SET PREFERENCES STUFF
 		sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		editor = sharedpreferences.edit();

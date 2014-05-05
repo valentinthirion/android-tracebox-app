@@ -1,6 +1,6 @@
 package be.ulg.ac.tracebox.data;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Vector;
 
 import android.location.Location;
@@ -21,12 +21,12 @@ public class Probe {
 		this.setDestination(dest);
 		setRouters(new Vector<Router>());
 
-		startDate = new Date(0);
+		startDate = new Date();
 	}
 
 	public void endProbe()
 	{
-		endDate = new Date(0);
+		endDate = new Date();
 	}
 
 	public void addRouter(Router r)

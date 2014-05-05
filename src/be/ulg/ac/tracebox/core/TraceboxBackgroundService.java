@@ -22,38 +22,49 @@ public class TraceboxBackgroundService extends Service
 	private int maxDuration;
 	private Vector<Destination> destinations;
 	private Vector<Probe> probes;
+	private DatabaseHandler db;
 
 	public void onCreate()
 	{
-		sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		Toast.makeText(this, "Tracebox scheduled created!", Toast.LENGTH_LONG).show();
+	}
 
-		// Need the max number of destinations
-		numberOfDestinations = sharedpreferences.getInt("numberOfDestinations", 5);
-		destinationsProbed = 0;
-
-		// Need the max duration
-		maxDuration = sharedpreferences.getInt("maxDuration", 120);
-
+	private void getRandomDestinations()
+	{
 		// Need the DB access and get destinations
 		destinations = new Vector<Destination>();
-		DatabaseHandler db = new DatabaseHandler(this);
+		db = new DatabaseHandler(this);
 		for (int i = 0; i < numberOfDestinations; i++)
 		{
 			Destination randomDestination = db.getRandomDestination();
 			destinations.add(randomDestination);
 		}
-
-		probes = new Vector<Probe>();
-
-		Toast.makeText(this, "Tracebox scheduled created!", Toast.LENGTH_LONG).show();
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
-		Toast.makeText(this, "Tracebox probing started!", Toast.LENGTH_LONG).show();
+		sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-		doTheTraceboxJob();
+		boolean probing = sharedpreferences.getBoolean("probingEnabled", false);
+		if (probing)
+		{
+			// Need the max number of destinations
+			numberOfDestinations = sharedpreferences.getInt("numberOfDestinations", 5);
+			destinationsProbed = 0;
+
+			// Need the max duration
+			maxDuration = sharedpreferences.getInt("maxDuration", 120);
+
+			getRandomDestinations();
+			probes = new Vector<Probe>();
+
+			Toast.makeText(this, "Tracebox probing started!", Toast.LENGTH_LONG).show();
+			getRandomDestinations();
+			doTheTraceboxJob();
+		}
+		else
+			System.out.println("Tried to start probe but disabled");
 			
 		return Service.START_STICKY;
 	}
@@ -104,7 +115,11 @@ public class TraceboxBackgroundService extends Service
 			{
 				// Save the connectivityMode
 				poster.addProbe(currentProbe);
+				
 			}
+
+			// Save Probe
+			db.addProbe(p);
 
 			// Save AS XML file
 			if (poster.saveProbesAsXMLFile("out.xml"))
@@ -112,6 +127,9 @@ public class TraceboxBackgroundService extends Service
 				ProbePoster instantPoster = new ProbePoster(poster);
 				instantPoster.execute();
 			}
+
+			// Save log
+			db.addLog(new Log("Probed " + p.getDestination().getName()));
 		}		
 	}
 

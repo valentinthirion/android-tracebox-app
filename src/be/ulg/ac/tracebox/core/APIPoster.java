@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
+import be.ulg.ac.tracebox.R;
 import be.ulg.ac.tracebox.data.PacketModification;
 import be.ulg.ac.tracebox.data.Probe;
 import be.ulg.ac.tracebox.data.Router;

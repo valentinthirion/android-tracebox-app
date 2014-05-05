@@ -44,15 +44,19 @@
 
     <!-- Results page -->
     <string name="results_page_title">Results</string>
-    <string name="results_middleboxes_button">Middleboxes</string>
+    <string name="results_middleboxes_button">Sent probes</string>
     <string name="results_logs_button">Logs</string>
 
     <!-- Settings stuff -->
-    <string name="preferences_file">res/xml/preferences.xml</string> 
+    <string name="preferences_file">res/xml/preferences.xml</string>
+
+    <!-- ABOUT page -->
+    <string name="about_text">Tracebox for Android has been developed by Valentin THIRION in the context of his Master Thesis at the University of Liege (Belgium) in june 2014. \nThis app needs to run on a rooted device. \nAll information and code about this project can be found at: www.androidtracebox.com\n</string>
+    <string name="about_website_button">Visit the website</string>
+    
 
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_destinations">DestinationsActivity</string>
     <string name="title_activity_results">ResultsActivity</string>
     <string name="title_activity_about">AboutActivity</string>

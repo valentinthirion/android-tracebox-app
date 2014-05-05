@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,6 +33,7 @@ import be.ulg.ac.tracebox.core.MiscUtilities;
 import be.ulg.ac.tracebox.core.MyLocation.LocationResult;
 import be.ulg.ac.tracebox.data.DatabaseHandler;
 import be.ulg.ac.tracebox.data.Destination;
+import be.ulg.ac.tracebox.data.Log;
 import be.ulg.ac.tracebox.data.Probe;
 
 public class MainActivity extends Activity {
@@ -39,12 +41,15 @@ public class MainActivity extends Activity {
 	private boolean installed = false;
 	private boolean probing = false;
 	private boolean instantProbing = false;
+
+	private DatabaseHandler db;
 	
 	private SharedPreferences sharedpreferences;
 	private Editor editor;
 
 	private Button instantProbeButton;
 	private TextView nextProbeTitle;
+	private ProgressDialog progressDialog;
 
 	private AlarmManager alarm;
 
@@ -53,6 +58,10 @@ public class MainActivity extends Activity {
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		setTitle("Tracebox for Android");
+
+		db = new DatabaseHandler(this);
 
 		// SET PREFERENCES STUFF
 		sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -116,7 +125,7 @@ public class MainActivity extends Activity {
 		{
 			instantProbeButton.setEnabled(false);
 			instantProbeButton.setBackgroundColor(Color.argb(255, 230, 126, 34)); // FLAT ORANGE
-			nextProbeTitle.setVisibility(View.VISIBLE);
+			//nextProbeTitle.setVisibility(View.VISIBLE);
 		}
 		else
 		{
@@ -134,7 +143,7 @@ public class MainActivity extends Activity {
 		{
 			statusButton.setBackgroundColor(Color.argb(255, 231, 76, 60)); // FLAT RED
 			statusButton.setText(R.string.main_status_offline_button);
-			nextProbeTitle.setVisibility(View.INVISIBLE);
+			//nextProbeTitle.setVisibility(View.INVISIBLE);
 		}
 	}
 
@@ -174,10 +183,10 @@ public class MainActivity extends Activity {
 		{
 			System.out.println("TURN PROBING OFF");
 
-			Intent intent = new Intent(this, TraceboxBackgroundService.class);
+			//Intent intent = new Intent(this, TraceboxBackgroundService.class);
 			//stopService(intent);
-			PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
-			alarm.cancel(pintent);
+			//PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
+			//alarm.cancel(pintent);
 
 			editor.putBoolean("probingEnabled", false);
 		}
@@ -215,7 +224,7 @@ public class MainActivity extends Activity {
 			try {
 				DatabaseHandler db = new DatabaseHandler(this);
 
-				Destination randomDestination = db.getRandomDestination();
+				final Destination randomDestination = db.getRandomDestination();
 				instantProbeButton.setText("Probing: " + randomDestination.getName());
 
 				// Show message
@@ -223,14 +232,17 @@ public class MainActivity extends Activity {
 			    .setTitle("Instant probe")
 			    .setMessage("Tracebox is going to probe " + randomDestination.getName() + ", you will have to accecpt the SU access in the prompt box.")
 			    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-			        public void onClick(DialogInterface dialog, int which) { 
-			            // continue with delete
+			        public void onClick(DialogInterface dialog, int which) {
+			        	TraceboxerInstantProbe prober = (TraceboxerInstantProbe) new TraceboxerInstantProbe(randomDestination);
+						prober.execute();
+
+			        	progressDialog = ProgressDialog.show(
+		                        MainActivity.this, "Please wait",
+		                        "Tracebox is probing " + randomDestination.getName() + "...\nThis could take up to one minute.", true);
+		                progressDialog.setCancelable(false);
 			        }
 			     })
 			     .show();
-
-				TraceboxerInstantProbe prober = (TraceboxerInstantProbe) new TraceboxerInstantProbe(randomDestination);
-				prober.execute();
 			}
 			catch (Exception e) {
 				System.out.println("ERROR in busybox: " + e.getMessage());
@@ -252,6 +264,8 @@ public class MainActivity extends Activity {
 
 	public void endInstantProbe(final Probe p)
 	{
+		progressDialog.cancel();
+
 		Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		v.vibrate(500); // Vibrate for 500 milliseconds
 		instantProbing = false;
@@ -271,6 +285,9 @@ public class MainActivity extends Activity {
 			MyLocation myLocation = new MyLocation();
 			myLocation.getLocation(this, locationResult);
 
+			// Save it
+			db.addProbe(p);
+
 			// Prepare the probe to be sent
 			APIPoster poster = new APIPoster();
 			poster.addProbe(p);
@@ -279,10 +296,16 @@ public class MainActivity extends Activity {
 			if (poster.saveProbesAsXMLFile("out.xml"))
 			{
 				ProbePoster instantPoster = new ProbePoster(poster);
-				instantPoster.execute();
+				instantPoster.execute();	
+				// Save log
+				db.addLog(new Log("Probed " + p.getDestination().getName()));
 			}
 			else
+			{
 				showDialogBox("ERROR", "The probe could not be saved, try again later.");
+				// Save log
+				db.addLog(new Log("Error while saving probe to " + p.getDestination().getName()));
+			}
 		}
 		else
 			showDialogBox("ERROR", "There was an error while the probing. Sorry.");
