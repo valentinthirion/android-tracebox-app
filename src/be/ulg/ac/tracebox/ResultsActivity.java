@@ -2,21 +2,19 @@ package be.ulg.ac.tracebox;
 
 import java.util.Vector;
 
-import be.ulg.ac.tracebox.data.DatabaseHandler;
-import be.ulg.ac.tracebox.data.Destination;
-import be.ulg.ac.tracebox.data.Log;
-import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import be.ulg.ac.tracebox.data.DatabaseHandler;
+import be.ulg.ac.tracebox.data.Log;
 
 public class ResultsActivity extends Activity {
-	@SuppressWarnings("unused")
 	private boolean logsMode;
 	private Button middleBoxesButton;
 	private Button logsBoxesButton;
@@ -88,7 +86,7 @@ public class ResultsActivity extends Activity {
 		TableRow tableRow = new TableRow(this);
 
 		TableLayout.LayoutParams tableRowParams
-		= new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
+		= new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT,TableLayout.LayoutParams.WRAP_CONTENT);
 
 		// Margin
 		int leftMargin=10;

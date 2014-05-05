@@ -24,13 +24,12 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import be.ulg.ac.tracebox.core.APIPoster;
+import be.ulg.ac.tracebox.core.MiscUtilities;
 import be.ulg.ac.tracebox.core.MyLocation;
+import be.ulg.ac.tracebox.core.MyLocation.LocationResult;
 import be.ulg.ac.tracebox.core.TraceboxBackgroundService;
 import be.ulg.ac.tracebox.core.TraceboxUtility;
-import be.ulg.ac.tracebox.core.MiscUtilities;
-import be.ulg.ac.tracebox.core.MyLocation.LocationResult;
 import be.ulg.ac.tracebox.data.DatabaseHandler;
 import be.ulg.ac.tracebox.data.Destination;
 import be.ulg.ac.tracebox.data.Log;
@@ -48,7 +47,7 @@ public class MainActivity extends Activity {
 	private Editor editor;
 
 	private Button instantProbeButton;
-	private TextView nextProbeTitle;
+	//private TextView nextProbeTitle;
 	private ProgressDialog progressDialog;
 
 	private AlarmManager alarm;
@@ -100,7 +99,7 @@ public class MainActivity extends Activity {
 		Button statusButton = (Button) this.findViewById(R.id.status_button);
 		Button installationButton = (Button) this.findViewById(R.id.installation_button);
 		instantProbeButton = (Button) this.findViewById(R.id.instant_probe_button);
-		nextProbeTitle = (TextView) this.findViewById(R.id.next_probe_title);
+		//nextProbeTitle = (TextView) this.findViewById(R.id.next_probe_title);
 
 		// INSTALLATION
 		if (this.installed)

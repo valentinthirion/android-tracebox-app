@@ -5,26 +5,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.Vector;
 
-import be.ulg.ac.tracebox.core.MiscUtilities;
-import be.ulg.ac.tracebox.data.DatabaseHandler;
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import be.ulg.ac.tracebox.data.*;
+import be.ulg.ac.tracebox.core.MiscUtilities;
+import be.ulg.ac.tracebox.data.DatabaseHandler;
+import be.ulg.ac.tracebox.data.Destination;
 
 public class DestinationsActivity extends Activity {
 	private Vector<Destination> destinations;
@@ -97,7 +94,8 @@ public class DestinationsActivity extends Activity {
 	{
 		if (MiscUtilities.isConnected(this))
 		{
-			newDestinationResolver getter = (newDestinationResolver) new newDestinationResolver().execute();
+			newDestinationResolver getter = (newDestinationResolver) new newDestinationResolver();
+			getter.execute();
 		}
 		else
 		{

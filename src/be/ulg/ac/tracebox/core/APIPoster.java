@@ -11,11 +11,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
-import be.ulg.ac.tracebox.R;
+import android.annotation.SuppressLint;
 import be.ulg.ac.tracebox.data.PacketModification;
 import be.ulg.ac.tracebox.data.Probe;
 import be.ulg.ac.tracebox.data.Router;
 
+@SuppressLint("SdCardPath")
 public class APIPoster {
 	private Vector<Probe> probes;
 	private String postData;

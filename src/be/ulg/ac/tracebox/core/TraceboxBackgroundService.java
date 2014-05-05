@@ -19,7 +19,7 @@ public class TraceboxBackgroundService extends Service
 	private SharedPreferences sharedpreferences;
 	private int numberOfDestinations;
 	private int destinationsProbed;
-	private int maxDuration;
+	//private int maxDuration;
 	private Vector<Destination> destinations;
 	private Vector<Probe> probes;
 	private DatabaseHandler db;
@@ -54,7 +54,7 @@ public class TraceboxBackgroundService extends Service
 			destinationsProbed = 0;
 
 			// Need the max duration
-			maxDuration = sharedpreferences.getInt("maxDuration", 120);
+			//maxDuration = sharedpreferences.getInt("maxDuration", 120);
 
 			getRandomDestinations();
 			probes = new Vector<Probe>();
