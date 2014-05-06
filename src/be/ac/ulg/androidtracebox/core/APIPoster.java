@@ -114,14 +114,14 @@ public class APIPoster {
 	{
 		// Get the XML representation
 		String postData = getPostXML();
-		System.out.println(postData);
+		//System.out.println(postData);
 
 		HttpURLConnection connection;
 	    OutputStreamWriter request = null;
 
 	    URL url = null;   
 	    String response = null;         
-	    String parameters = "probeData=" + this.postData;
+	    String parameters = "probeData=" + postData;
 
 	    try
         {

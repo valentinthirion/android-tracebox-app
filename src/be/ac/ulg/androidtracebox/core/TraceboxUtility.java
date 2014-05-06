@@ -35,47 +35,70 @@ public class TraceboxUtility
 		String[] steps = rawResult.split("\n");
 		for (int i = 0; i < steps.length; i++)
 		{
-			if (steps[i].contains("*"))
-				continue;
+			//System.out.println("Line : " + steps[i]);
 
 			String[] line = steps[i].split("\\s+");
-
-			if (line.length < 3)
-				continue;
-
 			int ttl = 0;
 			String router = "";
 			String modifs = "";
-			int k = 0;
-			// FIND THE TTL
+			boolean ttlFound = false;
+			boolean routerFound = false;
+			int starsCounter = 0;
+
 			for (int j = 0; j < line.length; j++)
 			{
-				k = j;
+				// SPACES
 				if (line[j].equals(""))
 					continue;
-				else
+
+				// TTL
+				try {
+					ttl = Integer.parseInt(line[j]);
+					ttlFound = true;
+					continue;
+				}
+				catch (NumberFormatException e) {
+					//System.out.println(line[j]);
+				}
+
+				// Star
+				if (line[j].equals("*"))
 				{
-					try {
-						ttl = Integer.parseInt(line[j]);
-						break;
-					}
-					catch (NumberFormatException e)
+					starsCounter++;
+				}
+
+				// Stars counter
+				if (starsCounter == 3)
+				{
+					Router currentRouter = new Router(ttl, "* * *", "");
+					newProbe.addRouter(currentRouter);
+					break;
+				}
+
+				// NOT STAR AND HAS TTL
+				if (ttlFound)
+				{
+					// FOUND ROUTER
+					if (!line[j].startsWith("IP") && !line[j].startsWith("TCP") && !routerFound)
 					{
-						e.printStackTrace();
+						router = line[j];
+						routerFound = true;
+
+						// FIND THE MODIFICATIONS
+						for (int k = j + 1; k < line.length; k++)
+							modifs += " " + line[k];
+
+						//System.out.println("Modifs : " + modifs);
+
+						Router currentRouter = new Router(ttl, router, modifs);
+						newProbe.addRouter(currentRouter);
+
 						break;
 					}
 				}
 			}
 
-			// FIND THE ROUTER ADDRESS
-			router = line[k + 1];
-
-			// FIND THE MODIFICATIONS
-			for (int j = k + 2; j < line.length; j++)
-				modifs += " " + line[j];
-
-			Router currentRouter = new Router(ttl, router, modifs);
-			newProbe.addRouter(currentRouter);
+			
 		}
 		
 		newProbe.endProbe();
