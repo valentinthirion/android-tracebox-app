@@ -152,28 +152,28 @@ public class MainActivity extends Activity {
 	 */
 	public void open_settings_page(View view)
 	{
-		Intent installationItent = new Intent(this, SettingsActivity.class);
-		startActivity(installationItent);
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivity(intent);
 	}
 
 	public void open_destinations_page(View view)
 	{
-		Intent installationItent = new Intent(this, DestinationsActivity.class);
-		startActivity(installationItent);
+		Intent intent = new Intent(this, DestinationsActivity.class);
+		startActivity(intent);
 	}
 
 	public void open_results_page(View view)
 	{
-		Intent installationItent = new Intent(this, ResultsActivity.class);
-		startActivity(installationItent);
+		Intent intent = new Intent(this, ResultsActivity.class);
+		startActivity(intent);
 	}
 
 	public void open_installation_page(View view)
 	{
 		if (MiscUtilities.isConnected(this))
 		{
-			Intent installationItent = new Intent(this, InstallationActivity.class);
-			startActivity(installationItent);
+			Intent intent = new Intent(this, InstallationActivity.class);
+			startActivity(intent);
 		}
 	}
 
@@ -291,7 +291,7 @@ public class MainActivity extends Activity {
 			db.addProbe(p);
 
 			// Prepare the probe to be sent
-			APIPoster poster = new APIPoster();
+			APIPoster poster = new APIPoster(this);
 			poster.addProbe(p);
 
 			// Save AS XML file

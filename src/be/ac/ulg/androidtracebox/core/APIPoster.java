@@ -12,6 +12,8 @@ import java.net.URL;
 import java.util.Vector;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import be.ac.ulg.androidtracebox.R;
 import be.ac.ulg.androidtracebox.data.PacketModification;
 import be.ac.ulg.androidtracebox.data.Probe;
 import be.ac.ulg.androidtracebox.data.Router;
@@ -20,11 +22,12 @@ import be.ac.ulg.androidtracebox.data.Router;
 public class APIPoster {
 	private Vector<Probe> probes;
 	private String postData;
-	private String postURL = "http://www.medineo.be/be.ac.ulg.androidtracebox/api/putProbes.php";
+	private String postURL;
 
-	public APIPoster()
+	public APIPoster(Context c)
 	{
 		probes = new Vector<Probe>();
+		postURL = c.getResources().getString(R.string.api_prefix) + "putProbes.php";
 	}
 
 	public void addProbe(Probe p)
@@ -40,7 +43,7 @@ public class APIPoster {
 		// Write the XML in a txt file
 		try {
 			  
-			File file = new File("/data/data/be.ulg.ac.tracebox/" + name);
+			File file = new File("/data/data/be.ac.ulg.androidtracebox/" + name);
  
 			// if file doesnt exists, then create it
 			if (!file.exists()) {

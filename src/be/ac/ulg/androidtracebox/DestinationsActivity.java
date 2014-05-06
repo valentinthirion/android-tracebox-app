@@ -31,12 +31,14 @@ public class DestinationsActivity extends Activity {
 	private TableLayout destinations_table;
 	private DatabaseHandler db;
 
-	private String postURL = "http://www.medineo.be/be.ac.ulg.androidtracebox/api/resolveURL.php";
+	private String postURL;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_destinations);
+
+		postURL = getResources().getString(R.string.api_prefix) + "resolveURL.php";
 
 		setTitle("Tracebox for Android - Destinations");
 

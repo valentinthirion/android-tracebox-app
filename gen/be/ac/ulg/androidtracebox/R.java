@@ -89,9 +89,11 @@ public final class R {
     public static final class string {
         /**  ABOUT page 
          */
-        public static final int about_text=0x7f060023;
-        public static final int about_website_button=0x7f060024;
-        public static final int action_settings=0x7f060026;
+        public static final int about_text=0x7f060025;
+        public static final int about_website_button=0x7f060026;
+        public static final int action_settings=0x7f060028;
+        public static final int api_prefix=0x7f060023;
+        public static final int busybox_url=0x7f060024;
         public static final int destinations_number=0x7f06001d;
         public static final int destinations_page_about_destinations_button=0x7f06001e;
         public static final int destinations_page_add_button=0x7f06001c;
@@ -141,10 +143,10 @@ public final class R {
          */
         public static final int settings_page_title=0x7f060015;
         public static final int settings_status_title=0x7f060016;
-        public static final int title_activity_about=0x7f060029;
-        public static final int title_activity_destinations=0x7f060027;
-        public static final int title_activity_results=0x7f060028;
-        public static final int title_activity_settings=0x7f060025;
+        public static final int title_activity_about=0x7f06002b;
+        public static final int title_activity_destinations=0x7f060029;
+        public static final int title_activity_results=0x7f06002a;
+        public static final int title_activity_settings=0x7f060027;
     }
     public static final class style {
         /** 

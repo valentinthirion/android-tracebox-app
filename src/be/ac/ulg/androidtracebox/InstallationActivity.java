@@ -273,7 +273,7 @@ public class InstallationActivity extends Activity {
 		@Override
 		protected Long doInBackground(URL... params)
 		{
-			String address = "http://www.medineo.be/be.ac.ulg.androidtracebox/busybox";
+			String address = getResources().getString(R.string.busybox_url);
 			String fileName = "busybox";
 			String internalDestination = "/data/data/be.ac.ulg.androidtracebox/";
 
@@ -360,7 +360,7 @@ public class InstallationActivity extends Activity {
 
 		private void parseDestinations()
 		{
-			String url = "http://www.medineo.be/be.ac.ulg.androidtracebox/api/getDestinations.php";
+			String url = getResources().getString(R.string.api_prefix) + "getDestinations.php";
 			XmlPullParserFactory xmlFactoryObject = null;
 			XmlPullParser parser = null;
 

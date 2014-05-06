@@ -38,8 +38,6 @@
             <intent-filter>
             </intent-filter>
         </activity>
-
-        <!-- Settings page -->
         <activity
             android:name="be.ac.ulg.androidtracebox.SettingsActivity"
             android:label="@string/main_app_name"

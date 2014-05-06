@@ -12,7 +12,10 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 import be.ac.ulg.androidtracebox.core.MyLocation.LocationResult;
-import be.ac.ulg.androidtracebox.data.*;
+import be.ac.ulg.androidtracebox.data.DatabaseHandler;
+import be.ac.ulg.androidtracebox.data.Destination;
+import be.ac.ulg.androidtracebox.data.Log;
+import be.ac.ulg.androidtracebox.data.Probe;
 
 public class TraceboxBackgroundService extends Service
 {
@@ -108,14 +111,13 @@ public class TraceboxBackgroundService extends Service
 		else
 		{
 			// Post the probes
-			APIPoster poster = new APIPoster();
+			APIPoster poster = new APIPoster(this);
 
 			// Send X probes
 			for (Probe currentProbe:probes)
 			{
 				// Save the connectivityMode
 				poster.addProbe(currentProbe);
-				
 			}
 
 			// Save Probe
