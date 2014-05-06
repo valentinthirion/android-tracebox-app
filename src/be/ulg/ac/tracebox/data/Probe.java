@@ -13,6 +13,8 @@ public class Probe {
 	private Destination destination;
 	private Date startDate;
 	private Date endDate;
+	private String carrierName;
+	private String cellularCarrierType;
 
 	private Vector<Router> routers;
 
@@ -106,5 +108,21 @@ public class Probe {
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+
+	public String getCarrierName() {
+		return carrierName;
+	}
+
+	public void setCarrierName(String carrierName) {
+		this.carrierName = carrierName;
+	}
+
+	public String getCellularCarrierType() {
+		return cellularCarrierType;
+	}
+
+	public void setCellularCarrierType(String cellularCarrierType) {
+		this.cellularCarrierType = cellularCarrierType;
 	}
 }

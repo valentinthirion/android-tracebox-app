@@ -73,7 +73,7 @@ public class MainActivity extends Activity {
 		{
 			Intent installationItent = new Intent(this, InstallationActivity.class);
 			startActivity(installationItent);
-		}
+		}		
 	}
 
 	@Override
@@ -274,6 +274,8 @@ public class MainActivity extends Activity {
 		{
 			// SAVE THIS PROBE AND SEND IT TO THE SERVER
 			p.setConnectivityMode(MiscUtilities.getConnectivityType(this)); // Save the connectivityMode
+			p.setCarrierName(MiscUtilities.getCellularCarrierName(this));
+			p.setCellularCarrierType(MiscUtilities.getCellularConnectionType(this));
 			
 			LocationResult locationResult = new LocationResult(){
 			    @Override

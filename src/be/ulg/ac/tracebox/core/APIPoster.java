@@ -70,7 +70,12 @@ public class APIPoster {
 		for (Probe p:probes)
 		{
 			// Probe information
-			builder.append("<probe address=\"" + p.getDestination().getAddress() + "\" starttime=\"" + p.getStartDate().toString() + "\" endtime=\"" + p.getEndDate().toString() + "\" connectivityType=\"" + p.getConnectivityMode() + "\" location=\"" + p.getLocationAsString() + "\">");
+			builder.append("<probe address=\"" + p.getDestination().getAddress() + "\" "
+					+ "starttime=\"" + p.getStartDate().toString() + "\" endtime=\"" + p.getEndDate().toString() + "\" "
+					+ "connectivityType=\"" + p.getConnectivityMode() + "\" "
+					+ "carrierName=\"" + p.getCarrierName() + "\" "
+					+ "carrierType=\"" + p.getCellularCarrierType() + "\" "
+					+ "location=\"" + p.getLocationAsString() + "\">");
 			builder.append("\n");
 
 			// Routers
