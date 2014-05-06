@@ -53,7 +53,7 @@
     <string name="busybox_url">http://www.medineo.be/be.ac.ulg.androidtracebox/busybox</string>
 
     <!-- ABOUT page -->
-    <string name="about_text">Tracebox for Android has been developed by Valentin THIRION in the context of his Master Thesis at the University of Liege (Belgium) in june 2014. \nThis app needs to run on a rooted device. \nAll information and code about this project can be found at: www.androidtracebox.com\n</string>
+    <string name="about_text">Tracebox for Android has been developed by Valentin THIRION in the context of his Master Thesis at the University of Liege (Belgium) in june 2014.\nThis work has been partially funded by the European Commission funded mPlane ICT-318627 project\n(http://www.ict-mplane.eu).\nThis app needs to run on a rooted device.\nAll information, copyrights and code about this project can be found at: www.androidtracebox.com</string>
     <string name="about_website_button">Visit the website</string>
     
 

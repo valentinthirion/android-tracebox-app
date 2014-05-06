@@ -9,14 +9,6 @@
     tools:context=".AboutActivity"
     android:background="#3498db" >
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="200dip"
-        android:layout_height="200dip"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_512x512" />
-
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -37,5 +29,13 @@
         android:paddingRight="2dp"
         android:text="@string/about_website_button"
         android:textColor="#FFFFFF" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="150dip"
+        android:layout_height="150dip"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_512x512" />
 
 </RelativeLayout>
