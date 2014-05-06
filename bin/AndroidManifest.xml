@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="be.ulg.ac.tracebox"
+    package="be.ac.ulg.androidtracebox"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -21,7 +21,7 @@
 
         <!-- Main menu -->
         <activity
-            android:name="be.ulg.ac.tracebox.MainActivity"
+            android:name="be.ac.ulg.androidtracebox.MainActivity"
             android:label="@string/main_app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -32,7 +32,7 @@
 
         <!-- Installation menu -->
         <activity
-            android:name="be.ulg.ac.tracebox.InstallationActivity"
+            android:name="be.ac.ulg.androidtracebox.InstallationActivity"
             android:label="@string/main_app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -41,28 +41,28 @@
 
         <!-- Settings page -->
         <activity
-            android:name="be.ulg.ac.tracebox.SettingsActivity"
+            android:name="be.ac.ulg.androidtracebox.SettingsActivity"
             android:label="@string/main_app_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="be.ulg.ac.tracebox.DestinationsActivity"
+            android:name="be.ac.ulg.androidtracebox.DestinationsActivity"
             android:label="@string/title_activity_destinations"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="be.ulg.ac.tracebox.ResultsActivity"
+            android:name="be.ac.ulg.androidtracebox.ResultsActivity"
             android:label="@string/title_activity_results" 
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="be.ulg.ac.tracebox.AboutActivity"
+            android:name="be.ac.ulg.androidtracebox.AboutActivity"
             android:label="@string/title_activity_about"
             android:screenOrientation="portrait" >
         </activity>
 
         <!-- Background task -->
-        <service android:name="be.ulg.ac.tracebox.core.TraceboxBackgroundService" />
+        <service android:name="be.ac.ulg.androidtracebox.core.TraceboxBackgroundService" />
     </application>
 
 </manifest>
