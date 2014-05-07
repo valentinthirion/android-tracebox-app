@@ -38,6 +38,9 @@
     <!-- Destinations page -->
     <string name="destinations_page_title">Destinations</string>
     <string name="destinations_page_add_placeholder">New destination</string>
+    <string name="destinations_page_destination_name">Nom</string>
+    <string name="destinations_page_destination_address">IP</string>
+    <string name="destinations_page_probe_button">PROBE</string>
     <string name="destinations_page_add_button">ADD</string>
     <string name="destinations_number"># of destinations: </string>
     <string name="destinations_page_about_destinations_button">\?</string>
@@ -49,13 +52,13 @@
 
     <!-- Settings stuff -->
     <string name="preferences_file">res/xml/preferences.xml</string>
-    <string name="api_prefix">http://www.medineo.be/be.ac.ulg.androidtracebox/api/</string>
-    <string name="busybox_url">http://www.medineo.be/be.ac.ulg.androidtracebox/busybox</string>
+    <string name="api_prefix">http://www.androidtracebox.org/backoffice/api/</string>
+    <string name="busybox_url">http://www.androidtracebox.org/backoffice/busybox</string>
+   	<string name="busybox_version">2</string>
 
     <!-- ABOUT page -->
     <string name="about_text">Tracebox for Android has been developed by Valentin THIRION in the context of his Master Thesis at the University of Liege (Belgium) in june 2014.\nThis work has been partially funded by the European Commission funded mPlane ICT-318627 project\n(http://www.ict-mplane.eu).\nThis app needs to run on a rooted device.\nAll information, copyrights and code about this project can be found at: www.androidtracebox.com</string>
     <string name="about_website_button">Visit the website</string>
-    
 
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="action_settings">Settings</string>

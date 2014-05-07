@@ -51,6 +51,7 @@ public class APIPoster {
 	{
 		// Get the XML representation
 		String postData = getPostXML();
+		System.out.println(postData);
 
 		// Write the XML in a txt file
 		try {
@@ -90,6 +91,7 @@ public class APIPoster {
 					+ "connectivityType=\"" + p.getConnectivityMode() + "\" "
 					+ "carrierName=\"" + p.getCarrierName() + "\" "
 					+ "carrierType=\"" + p.getCellularCarrierType() + "\" "
+					+ "BatteryDifference=\"" + p.getBatteryDifference() + "\" "
 					+ "location=\"" + p.getLocationAsString() + "\">");
 			builder.append("\n");
 

@@ -12,12 +12,103 @@
 
 package be.ac.ulg.androidtracebox.core;
 
+import android.content.Context;
+import android.location.Location;
+import be.ac.ulg.androidtracebox.core.MyLocation.LocationResult;
 import be.ac.ulg.androidtracebox.data.*;
 
 public class TraceboxUtility
 {
 	private Destination destination;
 	private String rawResult;
+	private Context context;
+	private DatabaseHandler db;
+	private float batteryBefore;
+
+	public TraceboxUtility(Context c)
+	{
+		context = c;
+
+		// Get the destination
+		db = new DatabaseHandler(context);
+		batteryBefore = MiscUtilities.getBatteryLevel(context);
+		destination = db.getRandomDestination();
+	}
+
+	public TraceboxUtility(Context c, Destination d)
+	{
+		context = c;
+		destination = d;
+
+		db = new DatabaseHandler(context);
+	}
+
+	public Destination getDestination()
+	{
+		return this.destination;
+	}
+
+	/*
+	 * Returns :
+	 *	1	: all went fine
+	 * -1	: error when probing
+	 * -2	: error when saving
+	 * -3	: error when posting
+	 * 
+	 */
+	public int doTraceboxAndPost()
+	{
+		Probe probe = this.doTracebox();
+
+		// Error while probing
+		if (probe == null)
+			return -1;
+
+		// Set Other data to the probe
+		probe = setExternalDataToProbe(probe);
+		probe.setBatteryDifference(batteryBefore - MiscUtilities.getBatteryLevel(context));
+
+		// Save it
+		db.addProbe(probe);
+
+		// Prepare the probe to be sent
+		APIPoster poster = new APIPoster(context);
+		poster.addProbe(probe);
+
+		// Save AS XML file
+		if (!poster.saveProbesAsXMLFile("out.xml"))
+		{
+			db.addLog(new Log("Error while saving probe to " + probe.getDestination().getName()));
+			return -2;
+		}
+
+		if (!poster.tryToPostData())
+			return -3;
+		
+		// Save log
+		db.addLog(new Log("Probed " + probe.getDestination().getName()));
+
+		return 1;
+	}
+
+	private Probe setExternalDataToProbe(final Probe probe)
+	{
+		// Save the probe and post it
+		probe.setConnectivityMode(MiscUtilities.getConnectivityType(context)); // Save the connectivityMode
+		probe.setCarrierName(MiscUtilities.getCellularCarrierName(context));
+		probe.setCellularCarrierType(MiscUtilities.getCellularConnectionType(context));
+		LocationResult locationResult = new LocationResult(){
+		    @Override
+		    public void gotLocation(Location location){
+		        probe.setLocation(location); // Save the location
+		    }
+		};
+		//MyLocation myLocation = new MyLocation();
+		//myLocation.getLocation(context, locationResult);
+
+		return probe;
+	}
+	
 
 	public TraceboxUtility(Destination d)
 	{

@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -35,18 +34,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import be.ac.ulg.androidtracebox.core.APIPoster;
 import be.ac.ulg.androidtracebox.core.MiscUtilities;
-import be.ac.ulg.androidtracebox.core.MyLocation;
 import be.ac.ulg.androidtracebox.core.TraceboxBackgroundService;
 import be.ac.ulg.androidtracebox.core.TraceboxUtility;
-import be.ac.ulg.androidtracebox.core.MyLocation.LocationResult;
 import be.ac.ulg.androidtracebox.data.DatabaseHandler;
 import be.ac.ulg.androidtracebox.data.Destination;
-import be.ac.ulg.androidtracebox.data.Log;
-import be.ac.ulg.androidtracebox.data.Probe;
-import be.ac.ulg.androidtracebox.R;
 
 public class MainActivity extends Activity {
 
@@ -103,11 +95,39 @@ public class MainActivity extends Activity {
 	    super.onResume();
 	}
 
-	private void drawView()
+	public void getAppStatus()
 	{
 		// GET VALUES
 		installed = sharedpreferences.getBoolean("systemInstalled", false);
 		probing = sharedpreferences.getBoolean("probingEnabled", false);
+
+		if (installed)
+		{
+			int installedBusyboxVersion = sharedpreferences.getInt("installedBusyboxVersion", 0);
+			String lastBusyboxVersion = getResources().getString(R.string.busybox_version);
+			int lastBusyboxVersionInt;
+			try {
+				lastBusyboxVersionInt= Integer.parseInt(lastBusyboxVersion);
+				if (installedBusyboxVersion < lastBusyboxVersionInt)
+				{
+					installed = false;
+					probing = false;
+					editor.putBoolean("probingEnabled", false);
+				}
+			}
+			catch (Exception e)
+			{
+				installed = false;
+				probing = false;
+				editor.putBoolean("probingEnabled", false);
+			}
+		}
+		
+	}
+
+	private void drawView()
+	{
+		this.getAppStatus();
 
 		Button statusButton = (Button) this.findViewById(R.id.status_button);
 		Button installationButton = (Button) this.findViewById(R.id.installation_button);
@@ -125,37 +145,38 @@ public class MainActivity extends Activity {
 				instantProbeButton.setBackgroundColor(Color.argb(255, 46, 204, 113)); // FLAT GREEN
 			else
 				instantProbeButton.setBackgroundColor(Color.argb(255, 231, 76, 60)); // FLAT RED
+
+			if (instantProbing)
+			{
+				instantProbeButton.setEnabled(false);
+				instantProbeButton.setBackgroundColor(Color.argb(255, 230, 126, 34)); // FLAT ORANGE
+				//nextProbeTitle.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				instantProbeButton.setText(R.string.main_instant_probe_button);
+				instantProbeButton.setEnabled(true);
+				instantProbeButton.setBackgroundColor(Color.argb(255, 46, 204, 113)); // FLAT GREEN
+			}
+
+			if (this.probing)
+			{
+				statusButton.setBackgroundColor(Color.argb(255, 46, 204, 113)); // FLAT GREEN
+				statusButton.setText(R.string.main_status_online_button);
+			}
+			else
+			{
+				statusButton.setBackgroundColor(Color.argb(255, 231, 76, 60)); // FLAT RED
+				statusButton.setText(R.string.main_status_offline_button);
+				//nextProbeTitle.setVisibility(View.INVISIBLE);
+			}
 		}
 		else
 		{
+			System.out.println("TEST");
 			statusButton.setEnabled(false);
 			instantProbeButton.setEnabled(false);
 			instantProbeButton.setBackgroundColor(Color.argb(255, 231, 76, 60)); // FLAT RED
-		}
-
-		if (instantProbing)
-		{
-			instantProbeButton.setEnabled(false);
-			instantProbeButton.setBackgroundColor(Color.argb(255, 230, 126, 34)); // FLAT ORANGE
-			//nextProbeTitle.setVisibility(View.VISIBLE);
-		}
-		else
-		{
-			instantProbeButton.setText(R.string.main_instant_probe_button);
-			instantProbeButton.setEnabled(true);
-			instantProbeButton.setBackgroundColor(Color.argb(255, 46, 204, 113)); // FLAT GREEN
-		}
-
-		if (this.probing)
-		{
-			statusButton.setBackgroundColor(Color.argb(255, 46, 204, 113)); // FLAT GREEN
-			statusButton.setText(R.string.main_status_online_button);
-		}
-		else
-		{
-			statusButton.setBackgroundColor(Color.argb(255, 231, 76, 60)); // FLAT RED
-			statusButton.setText(R.string.main_status_offline_button);
-			//nextProbeTitle.setVisibility(View.INVISIBLE);
 		}
 	}
 
@@ -233,48 +254,35 @@ public class MainActivity extends Activity {
 		{
 			instantProbing = true;
 
-			try {
-				DatabaseHandler db = new DatabaseHandler(this);
+			final Context thisOne = this;
 
-				final Destination randomDestination = db.getRandomDestination();
-				instantProbeButton.setText("Probing: " + randomDestination.getName());
-
-				// Show message
-				new AlertDialog.Builder(this)
-			    .setTitle("Instant probe")
-			    .setMessage("Tracebox is going to probe " + randomDestination.getName() + ", you will have to accecpt the SU access in the prompt box.")
-			    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-			        public void onClick(DialogInterface dialog, int which) {
-			        	TraceboxerInstantProbe prober = (TraceboxerInstantProbe) new TraceboxerInstantProbe(randomDestination);
-						prober.execute();
-
-			        	progressDialog = ProgressDialog.show(
-		                        MainActivity.this, "Please wait",
-		                        "Tracebox is probing " + randomDestination.getName() + "...\nThis could take up to one minute.", true);
-		                progressDialog.setCancelable(false);
-			        }
-			     })
-			     .show();
-			}
-			catch (Exception e) {
-				System.out.println("ERROR in busybox: " + e.getMessage());
-			}
-		}
-		else
-		{
+			// Show message
 			new AlertDialog.Builder(this)
-		    .setTitle("Error")
-		    .setMessage("You are not connected to internet by Wifi/Cellular. Tracebox can not send probes without a connection. Try later.")
+		    .setTitle("Instant probe")
+		    .setMessage("Tracebox is going to probe a random destination, you will have to accecpt the SU access in the prompt box.")
 		    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int which) { 
-		            // continue with delete
+		        public void onClick(DialogInterface dialog, int which) {
+
+		        	// Launch the prober
+		        	TraceboxerInstantProbe prober = (TraceboxerInstantProbe) new TraceboxerInstantProbe(thisOne);
+		        	Destination d = prober.getDestination();
+					prober.execute();
+
+		        	progressDialog = ProgressDialog.show(
+	                        MainActivity.this, "Please wait",
+	                        "Tracebox is probing " + d.getName() + "...\nThis could take up to one minute.", true);
+	                progressDialog.setCancelable(false);
 		        }
 		     })
 		     .show();
 		}
+		else
+		{
+			this.showDialogBox("Error", "You are not connected to internet by Wifi/Cellular. Tracebox can not send probes without a connection. Try later.");
+		}
 	}
 
-	public void endInstantProbe(final Probe p)
+	public void endInstantProbe(int probeResult)
 	{
 		progressDialog.cancel();
 
@@ -283,46 +291,23 @@ public class MainActivity extends Activity {
 		instantProbing = false;
 		this.drawView();
 
-		if (p != null)
+		switch (probeResult)
 		{
-			// SAVE THIS PROBE AND SEND IT TO THE SERVER
-			p.setConnectivityMode(MiscUtilities.getConnectivityType(this)); // Save the connectivityMode
-			p.setCarrierName(MiscUtilities.getCellularCarrierName(this));
-			p.setCellularCarrierType(MiscUtilities.getCellularConnectionType(this));
-			
-			LocationResult locationResult = new LocationResult(){
-			    @Override
-			    public void gotLocation(Location location){
-			        p.setLocation(location); // Save the location
-			    }
-			};
-			MyLocation myLocation = new MyLocation();
-			myLocation.getLocation(this, locationResult);
-
-			// Save it
-			db.addProbe(p);
-
-			// Prepare the probe to be sent
-			APIPoster poster = new APIPoster(this);
-			poster.addProbe(p);
-
-			// Save AS XML file
-			if (poster.saveProbesAsXMLFile("out.xml"))
-			{
-				ProbePoster instantPoster = new ProbePoster(poster);
-				instantPoster.execute();	
-				// Save log
-				db.addLog(new Log("Probed " + p.getDestination().getName()));
-			}
-			else
-			{
-				showDialogBox("ERROR", "The probe could not be saved, try again later.");
-				// Save log
-				db.addLog(new Log("Error while saving probe to " + p.getDestination().getName()));
-			}
-		}
-		else
+		case 1:
+			showDialogBox("Great", "Your probe has been submitted to the server and will be used for statistics, thank you.");
+			break;
+		case 0:
+			break;
+		case -1:
 			showDialogBox("ERROR", "There was an error while the probing. Sorry.");
+			break;
+		case -2:
+			showDialogBox("ERROR", "The probe could not be saved, try again later.");
+			break;
+		case -3:
+			showDialogBox("ERROR", "There was an error while posting the data on the server. Please, try again later");
+			break;
+		}
 	}
 
 	private void showDialogBox(String title, String message)
@@ -352,55 +337,33 @@ public class MainActivity extends Activity {
 
 	private class TraceboxerInstantProbe extends AsyncTask<URL, Integer, Long>
 	{
-		private Destination dest;
-		private Probe newProbe;
+		private int probeResult = 0;
+		private Context context;
+		private TraceboxUtility tracebox;
 
-		public TraceboxerInstantProbe (Destination d)
+		public TraceboxerInstantProbe (final Context c)
 		{
 	        super();
-	        dest = d;
+	        context = c;
+	        tracebox = new TraceboxUtility(context);
 	    }
 
 		@Override
 		protected Long doInBackground(URL... params)
 		{
-			TraceboxUtility tracebox = new TraceboxUtility(dest);
-			newProbe = tracebox.doTracebox();
+			probeResult = tracebox.doTraceboxAndPost();
 			return null;
+		}
+
+		public Destination getDestination()
+		{
+			return tracebox.getDestination();
 		}
 
 		@Override
 		protected void onPostExecute(Long result)
 		{
-			endInstantProbe(newProbe);				
-		}
-	}
-
-	private class ProbePoster extends AsyncTask<URL, Integer, Long>
-	{
-		private APIPoster poster;
-		private boolean postOK = false;
-
-		public ProbePoster (APIPoster p)
-		{
-	        super();
-	        poster = p;
-	    }
-
-		@Override
-		protected Long doInBackground(URL... params)
-		{
-			postOK = poster.tryToPostData();
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Long result)
-		{
-			if (postOK)
-				showDialogBox("Great", "Your probe has been submitted to the server and will be used for statistics, thank you.");
-			else
-				showDialogBox("ERROR", "There was an error while posting the data on the server. Please, try again later");
+			endInstantProbe(probeResult);				
 		}
 	}
 

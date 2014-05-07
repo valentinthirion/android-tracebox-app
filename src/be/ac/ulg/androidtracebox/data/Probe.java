@@ -27,6 +27,7 @@ public class Probe {
 	private Date endDate;
 	private String carrierName;
 	private String cellularCarrierType;
+	private float batteryDifference;
 
 	private Vector<Router> routers;
 
@@ -136,5 +137,13 @@ public class Probe {
 
 	public void setCellularCarrierType(String cellularCarrierType) {
 		this.cellularCarrierType = cellularCarrierType;
+	}
+
+	public float getBatteryDifference() {
+		return batteryDifference;
+	}
+
+	public void setBatteryDifference(float batteryDifference) {
+		this.batteryDifference = batteryDifference;
 	}
 }

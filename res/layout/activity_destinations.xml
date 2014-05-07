@@ -35,15 +35,15 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
+            android:background="#FFFFFF"
             android:ems="10"
+            android:focusableInTouchMode="true"
             android:hint="@string/destinations_page_add_placeholder"
             android:lines="1"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:singleLine="true"
-            android:textColor="#000000"
-            android:background="#FFFFFF"
-            android:focusableInTouchMode="true" />
+            android:textColor="#000000" />
 
         <Button
             android:id="@+id/status_button"
@@ -55,24 +55,19 @@
             android:layout_marginTop="5dp"
             android:layout_weight="0.45"
             android:background="#2c3e50"
+            android:onClick="add_custom_destination"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:text="@string/destinations_page_add_button"
-            android:textColor="#FFFFFF"
-            android:onClick="add_custom_destination" />
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
-     <ScrollView
-    	android:layout_width="fill_parent"
-    	android:layout_height="276dp"
-    	android:layout_weight="1">
-    	<TableLayout
-	        android:id="@+id/destinations_table"
-        	android:layout_width="fill_parent"
-        	android:layout_height="fill_parent"
-        	android:background="#FFFFFF" >
-    	</TableLayout>
-    </ScrollView>
+    <ListView
+        android:id="@+id/destinations_table"
+        android:layout_width="wrap_content"
+        android:layout_height="276dp"
+        android:layout_weight="0.47" >
+    </ListView>
 
     <!-- LIST BOTTOM -->
 
@@ -95,7 +90,6 @@
             android:paddingRight="2dp"
             android:text="@string/destinations_number"
             android:textColor="#FFFFFF" >
-
         </TextView>
 
         <Button
@@ -107,10 +101,10 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:background="#2c3e50"
+            android:onClick="show_info_about_destinations"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:text="@string/destinations_page_about_destinations_button"
-            android:onClick="show_info_about_destinations"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 

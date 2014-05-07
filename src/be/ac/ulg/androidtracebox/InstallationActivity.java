@@ -267,7 +267,18 @@ public class InstallationActivity extends Activity {
 		{
 			// Save log
 			db.addLog(new Log("Installation correctly ended"));
-						
+
+			String lastBusyboxVersion = getResources().getString(R.string.busybox_version);
+			int lastBusyboxVersionInt;
+			try {
+				lastBusyboxVersionInt = Integer.parseInt(lastBusyboxVersion);
+				editor.putInt("installedBusyboxVersion", lastBusyboxVersionInt);
+			}
+			catch (Exception e)
+			{
+				editor.putInt("installedBusyboxVersion", 0);
+			}
+			
 			System.out.println("GO GO WARRIORS!");
 			editor.putBoolean("systemInstalled", true);
 			editor.commit();
