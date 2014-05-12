@@ -157,6 +157,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Get a destination by id
     public Destination getDestination(int id)
     {
+    	System.out.println("ID to fetch : " + id);
         SQLiteDatabase db = this.getReadableDatabase();
  
         Cursor cursor = db.query(TABLE_DESTINATIONS, new String[] { KEY_ID,
@@ -257,9 +258,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (((android.database.Cursor) cursor).moveToFirst()) {
             do {
             	int d_id = cursor.getInt(2);
-            	Destination dest = this.getDestination(d_id);
-            	if (dest == null)
+
+            	if (d_id <= 0)
             		continue;
+
+            	Destination dest = this.getDestination(d_id);
 
             	Date date = new Date(cursor.getLong(3));
 
