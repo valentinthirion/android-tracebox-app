@@ -131,13 +131,12 @@ public class DestinationsActivity extends Activity {
 	    		        public void onClick(DialogInterface dialog, int which) {
 
 	    		        	// Launch the prober
-	    		        	TraceboxerInstantProbe prober = (TraceboxerInstantProbe) new TraceboxerInstantProbe(context);
-	    		        	Destination d = prober.getDestination();
+	    		        	TraceboxerInstantProbe prober = (TraceboxerInstantProbe) new TraceboxerInstantProbe(context, currentDest);
 	    					prober.execute();
 
 	    		        	progressDialog = ProgressDialog.show(
 	    		        			context, "Please wait",
-	    	                        "Tracebox is probing " + d.getName() + "...\nThis could take up to one minute.", true);
+	    	                        "Tracebox is probing " + currentDest.getName() + "...\nThis could take up to one minute.", true);
 	    	                progressDialog.setCancelable(false);
 	    		        }
 	    		     })
@@ -324,12 +323,14 @@ public class DestinationsActivity extends Activity {
 		private int probeResult = 0;
 		private Context context;
 		private TraceboxUtility tracebox;
+		private Destination destination;
 
-		public TraceboxerInstantProbe (final Context c)
+		public TraceboxerInstantProbe (final Context c, final Destination d)
 		{
 	        super();
 	        context = c;
-	        tracebox = new TraceboxUtility(context);
+	        destination = d;
+	        tracebox = new TraceboxUtility(context, destination);
 	    }
 
 		@Override
@@ -337,11 +338,6 @@ public class DestinationsActivity extends Activity {
 		{
 			probeResult = tracebox.doTraceboxAndPost();
 			return null;
-		}
-
-		public Destination getDestination()
-		{
-			return tracebox.getDestination();
 		}
 
 		@Override

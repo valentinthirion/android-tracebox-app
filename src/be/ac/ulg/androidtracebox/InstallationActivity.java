@@ -111,15 +111,7 @@ public class InstallationActivity extends Activity {
 	{
 		if (CommandManager.isDeviceRooted())
 		{
-			new AlertDialog.Builder(this)
-		    .setTitle("Great")
-		    .setMessage("Your device is rooted, You now need to install the special busybox.")
-		    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int which) { 
-		            // continue with delete
-		        }
-		     })
-		     .show();
+			this.showDialogBox("Great", "Your device is rooted, You now need to install the special busybox.");
 
 			deviceIsRooted = true;
 			rootButton.setText("YES");
@@ -139,15 +131,7 @@ public class InstallationActivity extends Activity {
 		}
 		else
 		{
-			new AlertDialog.Builder(this)
-		    .setTitle("Error")
-		    .setMessage("Your device is not rooted, tracebox could only be used on rooted device. Go root it and then retry.")
-		    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int which) { 
-		            // continue with delete
-		        }
-		     })
-		     .show();
+			this.showDialogBox("Error", "Your device is not rooted, tracebox could only be used on rooted device. Go root it and then retry.");
 
 			rootButton.setText("NO");
 			rootButton.setEnabled(false);
@@ -248,12 +232,16 @@ public class InstallationActivity extends Activity {
 
 			// Save log
 			db.addLog(new Log("Destinations got"));
-			return false;
+
+			// Show message to the user
+			this.showDialogBox("Thanks", "Thanks for having downloaded, installed and configured Tracebox for Android.\n\nNow I please you to enable background probing to help me with my researches. You just have to click on \"OFFLINE\" on the main menu. It will only consume a few % of battery per day but save a lot of polar bears. Thanks a lot!");
+
+			return true;
 		}
 
 		this.showText("Error while getting destinations, try again.");
 
-		return true;
+		return false;
 	}
 
 	// Finish the installation and go to the main menu
@@ -282,8 +270,22 @@ public class InstallationActivity extends Activity {
 			System.out.println("GO GO WARRIORS!");
 			editor.putBoolean("systemInstalled", true);
 			editor.commit();
+
 			this.finish();
 		}
+	}
+
+	private void showDialogBox(String title, String message)
+	{
+		new AlertDialog.Builder(this)
+	    .setTitle(title)
+	    .setMessage(message)
+	    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) { 
+	            // continue with delete
+	        }
+	     })
+	     .show();
 	}
 
 	// Busybox getter
@@ -342,7 +344,7 @@ public class InstallationActivity extends Activity {
 		        try {
 		        	System.out.println("INSTALLATION BEGINS");
 		        	System.out.println(CommandManager.executeCommandAsRoot("mount -o rw,remount -t yaffs2 /dev/block/mtdblock4 /system"));
-		        	System.out.println(CommandManager.executeCommandAsRoot("dd if=/data/data/be.ulg.ac.tracebox/busybox of=/system/xbin/busybox"));
+		        	System.out.println(CommandManager.executeCommandAsRoot("dd if=/data/data/be.ac.ulg.androidtracebox/busybox of=/system/xbin/busybox"));
 		        	System.out.println(CommandManager.executeCommandAsRoot("chmod 4755 /system/xbin/busybox"));
 		        	System.out.println(CommandManager.executeCommandAsRoot("mount -o ro,remount -t yaffs2 /dev/block/mtdblock4 /system"));
 		        	System.out.println("INSTALLATION DONE");

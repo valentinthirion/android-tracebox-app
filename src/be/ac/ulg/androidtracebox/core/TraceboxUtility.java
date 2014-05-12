@@ -38,9 +38,10 @@ public class TraceboxUtility
 	public TraceboxUtility(Context c, Destination d)
 	{
 		context = c;
-		destination = d;
+		destination = d;		
 
 		db = new DatabaseHandler(context);
+		batteryBefore = MiscUtilities.getBatteryLevel(context);
 	}
 
 	public Destination getDestination()
@@ -62,6 +63,10 @@ public class TraceboxUtility
 
 		// Error while probing
 		if (probe == null)
+			return -1;
+
+		// Error, no router found
+		if (probe.getRouters().size() == 0)
 			return -1;
 
 		// Set Other data to the probe
@@ -97,7 +102,7 @@ public class TraceboxUtility
 		probe.setConnectivityMode(MiscUtilities.getConnectivityType(context)); // Save the connectivityMode
 		probe.setCarrierName(MiscUtilities.getCellularCarrierName(context));
 		probe.setCellularCarrierType(MiscUtilities.getCellularConnectionType(context));
-		LocationResult locationResult = new LocationResult(){
+		new LocationResult(){
 		    @Override
 		    public void gotLocation(Location location){
 		        probe.setLocation(location); // Save the location
@@ -108,13 +113,6 @@ public class TraceboxUtility
 
 		return probe;
 	}
-	
-
-	public TraceboxUtility(Destination d)
-	{
-		super();
-		destination = d;
-	}
 
 	public Probe doTracebox()
 	{
@@ -123,7 +121,7 @@ public class TraceboxUtility
 
 		// Create the request
 		String request = "system/xbin/busybox tracebox " + destination.getAddress(); 
-		System.out.println("Request : " + request);
+		//System.out.println("Request : " + request);
 
 		try {
 			// Execute the request

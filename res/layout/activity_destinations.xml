@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#3498db"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
     <TextView
@@ -40,6 +42,8 @@
             android:focusableInTouchMode="true"
             android:hint="@string/destinations_page_add_placeholder"
             android:lines="1"
+            android:nextFocusLeft="@id/destinations_page_add_edittext"
+            android:nextFocusUp="@id/destinations_page_add_edittext"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:singleLine="true"
@@ -64,9 +68,9 @@
 
     <ListView
         android:id="@+id/destinations_table"
-        android:layout_width="wrap_content"
-        android:layout_height="276dp"
-        android:layout_weight="0.47" >
+        android:layout_width="match_parent"
+        android:layout_height="311dp"
+        android:layout_weight="0.90" >
     </ListView>
 
     <!-- LIST BOTTOM -->
@@ -89,8 +93,7 @@
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:text="@string/destinations_number"
-            android:textColor="#FFFFFF" >
-        </TextView>
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/about_destinations_button"

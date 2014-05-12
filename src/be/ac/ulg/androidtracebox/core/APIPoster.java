@@ -33,8 +33,8 @@ import be.ac.ulg.androidtracebox.data.Router;
 @SuppressLint("SdCardPath")
 public class APIPoster {
 	private Vector<Probe> probes;
-	private String postData;
 	private String postURL;
+	private String xml;
 
 	public APIPoster(Context c)
 	{
@@ -50,8 +50,8 @@ public class APIPoster {
 	public boolean saveProbesAsXMLFile(String name)
 	{
 		// Get the XML representation
-		String postData = getPostXML();
-		System.out.println(postData);
+		this.getPostXML();
+		System.out.println(xml);
 
 		// Write the XML in a txt file
 		try {
@@ -65,11 +65,8 @@ public class APIPoster {
  
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(postData);
-			bw.close();
- 
-			System.out.println("Written	");
- 
+			bw.write(xml);
+			bw.close(); 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -77,7 +74,7 @@ public class APIPoster {
 		return true;
 	}
 
-	private String getPostXML()
+	private void getPostXML()
 	{
 		StringBuilder builder = new StringBuilder();
 
@@ -118,24 +115,22 @@ public class APIPoster {
 		builder.append("</xml>");
 		builder.append("\n");
 
-		postData = builder.toString();
-		
-		return postData;
+		xml = builder.toString();
 	}
 
 
 	public boolean tryToPostData()
 	{
 		// Get the XML representation
-		String postData = getPostXML();
-		//System.out.println(postData);
+		if (xml == null)
+			this.getPostXML();
 
 		HttpURLConnection connection;
 	    OutputStreamWriter request = null;
 
 	    URL url = null;   
 	    String response = null;         
-	    String parameters = "probeData=" + postData;
+	    String parameters = "probeData=" + xml;
 
 	    try
         {
@@ -158,7 +153,7 @@ public class APIPoster {
                 sb.append(line + "\n");
 
             response = sb.toString();
-            System.out.println("Message from Server: " + response);             
+            System.out.println("Server response: " + response);             
             isr.close();
             reader.close();
 

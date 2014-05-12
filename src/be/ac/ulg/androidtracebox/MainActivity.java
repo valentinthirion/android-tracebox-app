@@ -37,7 +37,6 @@ import android.widget.Button;
 import be.ac.ulg.androidtracebox.core.MiscUtilities;
 import be.ac.ulg.androidtracebox.core.TraceboxBackgroundService;
 import be.ac.ulg.androidtracebox.core.TraceboxUtility;
-import be.ac.ulg.androidtracebox.data.DatabaseHandler;
 import be.ac.ulg.androidtracebox.data.Destination;
 
 public class MainActivity extends Activity {
@@ -45,8 +44,6 @@ public class MainActivity extends Activity {
 	private boolean installed = false;
 	private boolean probing = false;
 	private boolean instantProbing = false;
-
-	private DatabaseHandler db;
 	
 	private SharedPreferences sharedpreferences;
 	private Editor editor;
@@ -64,8 +61,6 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		setTitle("Tracebox for Android");
-
-		db = new DatabaseHandler(this);
 
 		// SET PREFERENCES STUFF
 		sharedpreferences = PreferenceManager.getDefaultSharedPreferences(this);

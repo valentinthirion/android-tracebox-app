@@ -46,17 +46,19 @@ public class CommandManager {
 			DataOutputStream stdin = new DataOutputStream(p.getOutputStream());
 
 			// Execute the command
+			System.out.println("Cmd: " + cmd);
 			stdin.writeBytes(cmd + " \n");
-			//System.out.println("Cmd: " + cmd);
-			
+
 			InputStream stdout = p.getInputStream();
 
 			byte[] buffer = new byte[BUFFER_SIZE];
 			int read;
 			
-			while(true)
+			while (true)
 			{
-				Thread.sleep(5000); // WAIT FOR JOBS
+				System.out.println("wait");
+				Thread.sleep(5000); // WAIT
+
 				if (stdout.available() <= 0)
 					break;
 
@@ -67,6 +69,7 @@ public class CommandManager {
 
 			    String seg = new String(buffer, 0, read);
 			    builder.append(seg);
+			    System.out.println("ret : " + seg);
 
 			    if(read < BUFFER_SIZE)
 			    	continue;
@@ -74,6 +77,7 @@ public class CommandManager {
 
 			stdin.writeBytes("exit\n");
 			stdin.flush();
+
 			return builder.toString();
 
 		} catch (IOException e) {

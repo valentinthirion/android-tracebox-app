@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.Vector;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -93,7 +94,7 @@ public class TraceboxBackgroundService extends Service
 	{
 		// Do the tracebox
 		Toast.makeText(this, "Probing:" + d.getName(), Toast.LENGTH_LONG).show();
-		TraceboxerProber prober = (TraceboxerProber) new TraceboxerProber(d);
+		TraceboxerProber prober = (TraceboxerProber) new TraceboxerProber(this, d);
 		destinationsProbed++;
 		prober.execute();	
 	}
@@ -160,19 +161,21 @@ public class TraceboxBackgroundService extends Service
 
 	private class TraceboxerProber extends AsyncTask<URL, Integer, Long>
 	{
-		private Destination dest;
 		private Probe newProbe;
+		private Context context;
+		private Destination destination;
 
-		public TraceboxerProber (Destination d)
+		public TraceboxerProber (Context c, Destination d)
 		{
 	        super();
-	        dest = d;
+	        context = c;
+	        destination = d;
 	    }
 
 		@Override
 		protected Long doInBackground(URL... params)
 		{
-			TraceboxUtility tracebox = new TraceboxUtility(dest);
+			TraceboxUtility tracebox = new TraceboxUtility(context, destination);
 			newProbe = tracebox.doTracebox();
 			return null;
 		}
