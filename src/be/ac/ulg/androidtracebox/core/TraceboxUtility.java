@@ -166,6 +166,7 @@ public class TraceboxUtility
 				if (line[j].equals("*"))
 				{
 					starsCounter++;
+					continue;
 				}
 
 				// Stars counter

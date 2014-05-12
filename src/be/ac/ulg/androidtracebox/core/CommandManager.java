@@ -56,7 +56,6 @@ public class CommandManager {
 			
 			while (true)
 			{
-				System.out.println("wait");
 				Thread.sleep(5000); // WAIT
 
 				if (stdout.available() <= 0)
@@ -69,7 +68,7 @@ public class CommandManager {
 
 			    String seg = new String(buffer, 0, read);
 			    builder.append(seg);
-			    System.out.println("ret : " + seg);
+			    System.out.println(seg);
 
 			    if(read < BUFFER_SIZE)
 			    	continue;

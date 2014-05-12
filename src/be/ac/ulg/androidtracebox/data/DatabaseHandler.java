@@ -164,6 +164,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
+
+        if (cursor.getCount() == 0)
+        	return null;
  
         Destination dest = new Destination(cursor.getString(1), cursor.getString(2));
         dest.setId(Integer.parseInt(cursor.getString(0)));
@@ -255,6 +258,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
             	int d_id = cursor.getInt(2);
             	Destination dest = this.getDestination(d_id);
+            	if (dest == null)
+            		continue;
+
             	Date date = new Date(cursor.getLong(3));
 
             	String s = new String(date.toString() + "\n"
