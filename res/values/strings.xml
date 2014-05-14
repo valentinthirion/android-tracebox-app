@@ -50,20 +50,25 @@
     <string name="results_middleboxes_button">Sent probes</string>
     <string name="results_logs_button">Logs</string>
 
+    <!-- Results detail -->
+    <string name="results_detail_page_export_button">Export</string>
+    <string name="results_detail_page_export_title">Export the probe using</string>
+
     <!-- Settings stuff -->
     <string name="preferences_file">res/xml/preferences.xml</string>
     <string name="api_prefix">http://www.androidtracebox.org/backoffice/api/</string>
     <string name="busybox_url">http://www.androidtracebox.org/backoffice/busybox</string>
-   	<string name="busybox_version">3</string>
+    <string name="busybox_version">4</string>
 
     <!-- ABOUT page -->
     <string name="about_text">Tracebox for Android has been developed by Valentin THIRION in the context of his Master Thesis at the University of Liege (Belgium) in june 2014.\nThis work has been partially funded by the European Commission funded mPlane ICT-318627 project\n(http://www.ict-mplane.eu).\nThis app needs to run on a rooted device.\nAll information, copyrights and code about this project can be found at: www.androidtracebox.com</string>
     <string name="about_website_button">Visit the website</string>
-
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_destinations">DestinationsActivity</string>
     <string name="title_activity_results">ResultsActivity</string>
     <string name="title_activity_about">AboutActivity</string>
+    <string name="title_activity_result_detail">ResultDetailActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

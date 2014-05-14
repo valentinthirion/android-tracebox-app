@@ -35,6 +35,19 @@ public class Router {
 		}
 	}
 
+	public String toString()
+	{
+		StringBuilder text = new StringBuilder();
+
+		text.append(this.getTtl() + " " + this.getAddress() + " ");
+		for (PacketModification pm:this.getPacketModifications())
+		{
+			text.append(pm.getLayer() + "::" + pm.getField() + " ");
+		}
+
+		return text.toString();
+	}
+
 	public String getAddress() {
 		return address;
 	}

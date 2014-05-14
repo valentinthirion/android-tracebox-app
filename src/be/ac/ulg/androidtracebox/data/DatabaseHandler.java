@@ -47,6 +47,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_PROBE_DATE = "date";
     private static final String KEY_NB_HOPS = "nb_hops";
     private static final String KEY_NB_PM = "nb_pm";
+    private static final String KEY_PROBE_STRING = "probe_string";
     // Logs Table Columns names
     private static final String KEY_MESSAGE = "message";
     private static final String KEY_DATE = "date";
@@ -72,7 +73,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_DESTINATION_ID + " INT, "
                 + KEY_PROBE_DATE + " LONGINT, "
                 + KEY_NB_HOPS + " INT, "
-                + KEY_NB_PM + " INT)";
+                + KEY_NB_PM + " INT, "
+                + KEY_PROBE_STRING + " TEXT)";
         db.execSQL(CREATE_PROBES_TABLE);
 
         // Logs
@@ -210,6 +212,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_DESTINATION_ID, p.getDestination().getId()); // Date
         values.put(KEY_PROBE_DATE, p.getStartDate().getTime()); // Date
         values.put(KEY_NB_HOPS, p.getRouters().size());
+        values.put(KEY_PROBE_STRING, p.toString());
         int nb_pm = 0;
         for (Router r:p.getRouters())
         {
@@ -239,6 +242,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Date date = new Date(cursor.getLong(3));
         newProbe.setStartDate(date);
         newProbe.setEndDate(date);
+        newProbe.setStrinRepresentation(cursor.getString(6));
         cursor.close();
 
     	return newProbe;

@@ -28,6 +28,7 @@ public class Probe {
 	private String carrierName;
 	private String cellularCarrierType;
 	private float batteryDifference;
+	private String strinRepresentation;
 
 	private Vector<Router> routers;
 
@@ -42,6 +43,22 @@ public class Probe {
 	public void endProbe()
 	{
 		endDate = new Date();
+	}
+
+	public String toString()
+	{
+		StringBuilder text = new StringBuilder();
+		// Start
+		text.append("traceboxing to " + this.getDestination().getAddress() + "\n");
+
+		// Routers
+		for (Router r:this.getRouters())
+		{
+			text.append(r.toString() + "\n");
+		}
+
+		return text.toString();
+		
 	}
 
 	public void addRouter(Router r)
@@ -145,5 +162,13 @@ public class Probe {
 
 	public void setBatteryDifference(float batteryDifference) {
 		this.batteryDifference = batteryDifference;
+	}
+
+	public String getStrinRepresentation() {
+		return strinRepresentation;
+	}
+
+	public void setStrinRepresentation(String strinRepresentation) {
+		this.strinRepresentation = strinRepresentation;
 	}
 }

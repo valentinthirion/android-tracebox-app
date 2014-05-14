@@ -24,6 +24,7 @@ public class TraceboxUtility
 	private Context context;
 	private DatabaseHandler db;
 	private float batteryBefore;
+	private Probe probeResult;
 
 	public TraceboxUtility(Context c)
 	{
@@ -44,6 +45,11 @@ public class TraceboxUtility
 		batteryBefore = MiscUtilities.getBatteryLevel(context);
 	}
 
+	public Probe getProbe()
+	{
+		return probeResult;
+	}
+
 	public Destination getDestination()
 	{
 		return this.destination;
@@ -59,31 +65,31 @@ public class TraceboxUtility
 	 */
 	public int doTraceboxAndPost()
 	{
-		Probe probe = this.doTracebox();
+		probeResult = this.doTracebox();
 
 		// Error while probing
-		if (probe == null)
+		if (probeResult == null)
 			return -1;
 
 		// Error, no router found
-		if (probe.getRouters().size() == 0)
+		if (probeResult.getRouters().size() == 0)
 			return -1;
 
 		// Set Other data to the probe
-		probe = setExternalDataToProbe(probe);
-		probe.setBatteryDifference(batteryBefore - MiscUtilities.getBatteryLevel(context));
+		probeResult = setExternalDataToProbe(probeResult);
+		probeResult.setBatteryDifference(batteryBefore - MiscUtilities.getBatteryLevel(context));
 
 		// Save it
-		db.addProbe(probe);
+		db.addProbe(probeResult);
 
 		// Prepare the probe to be sent
 		APIPoster poster = new APIPoster(context);
-		poster.addProbe(probe);
+		poster.addProbe(probeResult);
 
 		// Save AS XML file
 		if (!poster.saveProbesAsXMLFile("out.xml"))
 		{
-			db.addLog(new Log("Error while saving probe to " + probe.getDestination().getName()));
+			db.addLog(new Log("Error while saving probe to " + probeResult.getDestination().getName()));
 			return -2;
 		}
 
@@ -91,7 +97,7 @@ public class TraceboxUtility
 			return -3;
 		
 		// Save log
-		db.addLog(new Log("Probed " + probe.getDestination().getName()));
+		db.addLog(new Log("Probed " + probeResult.getDestination().getName()));
 
 		return 1;
 	}
@@ -148,10 +154,6 @@ public class TraceboxUtility
 
 			for (int j = 0; j < line.length; j++)
 			{
-				// SPACES
-				if (line[j].equals(""))
-					continue;
-
 				// TTL
 				try {
 					ttl = Integer.parseInt(line[j]);
@@ -162,19 +164,22 @@ public class TraceboxUtility
 					//System.out.println(line[j]);
 				}
 
+				// SPACES
+				if (line[j].equals(""))
+					continue;
+
 				// Star
 				if (line[j].equals("*"))
 				{
 					starsCounter++;
-					continue;
-				}
 
-				// Stars counter
-				if (starsCounter == 3)
-				{
-					Router currentRouter = new Router(ttl, "* * *", "");
-					newProbe.addRouter(currentRouter);
-					break;
+					// Stars counter
+					if (starsCounter == 3)
+					{
+						newProbe.addRouter(new Router(ttl, "* * *", ""));
+						break;
+					}
+					continue;
 				}
 
 				// NOT STAR AND HAS TTL
@@ -191,9 +196,7 @@ public class TraceboxUtility
 							modifs += " " + line[k];
 
 						//System.out.println("Modifs : " + modifs);
-
-						Router currentRouter = new Router(ttl, router, modifs);
-						newProbe.addRouter(currentRouter);
+						newProbe.addRouter(new Router(ttl, router, modifs));
 
 						break;
 					}

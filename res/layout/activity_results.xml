@@ -6,7 +6,7 @@
     android:background="#3498db" >
 
     <TextView
-        android:id="@+id/settings_page_label"
+        android:id="@+id/results_page_label"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:layout_marginBottom="5dp"

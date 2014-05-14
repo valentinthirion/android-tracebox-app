@@ -38,6 +38,7 @@ import be.ac.ulg.androidtracebox.core.MiscUtilities;
 import be.ac.ulg.androidtracebox.core.TraceboxBackgroundService;
 import be.ac.ulg.androidtracebox.core.TraceboxUtility;
 import be.ac.ulg.androidtracebox.data.Destination;
+import be.ac.ulg.androidtracebox.data.Probe;
 
 public class MainActivity extends Activity {
 
@@ -277,7 +278,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public void endInstantProbe(int probeResult)
+	public void endInstantProbe(int probeResult, final Probe p)
 	{
 		progressDialog.cancel();
 
@@ -289,7 +290,22 @@ public class MainActivity extends Activity {
 		switch (probeResult)
 		{
 		case 1:
-			showDialogBox("Great", "Your probe has been submitted to the server and will be used for statistics, thank you.");
+			new AlertDialog.Builder(this)
+		    .setTitle("Great")
+		    .setMessage("Your probe has been submitted to the server and will be used for statistics, thank you. To see the detail, click on \"Yes\"")
+		    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int which) { 
+		        	// Open pop up with result
+		        	openResultForProbe(p);
+		        }
+		     })
+		    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int which) { 
+		            // do nothing
+		        }
+		     })
+		    .setIcon(android.R.drawable.ic_dialog_alert)
+		     .show();
 			break;
 		case 0:
 			break;
@@ -303,6 +319,17 @@ public class MainActivity extends Activity {
 			showDialogBox("ERROR", "There was an error while posting the data on the server. Please, try again later");
 			break;
 		}
+	}
+
+	private void openResultForProbe(Probe p)
+	{
+		// Open pop up with result
+		Intent intent = new Intent(this, ResultDetailActivity.class);
+		Bundle b = new Bundle();
+		b.putString("destinationString", p.getDestination().getAddress());
+		b.putString("probeString", p.toString());
+		intent.putExtras(b); 
+		startActivity(intent);
 	}
 
 	private void showDialogBox(String title, String message)
@@ -358,7 +385,7 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPostExecute(Long result)
 		{
-			endInstantProbe(probeResult);				
+			endInstantProbe(probeResult, tracebox.getProbe());				
 		}
 	}
 

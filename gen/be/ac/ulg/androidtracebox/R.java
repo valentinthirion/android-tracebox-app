@@ -28,18 +28,19 @@ public final class R {
     }
     public static final class id {
         public static final int about_destinations_button=0x7f090008;
-        public static final int action_settings=0x7f09002c;
-        public static final int busybox_button=0x7f090029;
+        public static final int action_settings=0x7f090030;
+        public static final int busybox_button=0x7f09002d;
         public static final int button1=0x7f090002;
-        public static final int destination_ip=0x7f090023;
-        public static final int destination_name=0x7f090022;
+        public static final int destination_ip=0x7f090027;
+        public static final int destination_name=0x7f090026;
         public static final int destinations_button=0x7f090009;
         public static final int destinations_page_add_edittext=0x7f090004;
         public static final int destinations_page_label=0x7f090003;
-        public static final int destinations_page_probe_button=0x7f090024;
+        public static final int destinations_page_probe_button=0x7f090028;
         public static final int destinations_table=0x7f090006;
-        public static final int endInstallation=0x7f09002b;
-        public static final int frequency_label=0x7f090016;
+        public static final int endInstallation=0x7f09002f;
+        public static final int export_button=0x7f090011;
+        public static final int frequency_label=0x7f09001a;
         public static final int imageView1=0x7f090001;
         public static final int info_button=0x7f09000f;
         public static final int installation_button=0x7f09000b;
@@ -47,58 +48,63 @@ public final class R {
         public static final int next_probe_title=0x7f09000c;
         public static final int number_of_destinations_label=0x7f090007;
         public static final int results_button=0x7f09000a;
-        public static final int results_table=0x7f090013;
-        public static final int root_button=0x7f090028;
-        public static final int root_title=0x7f090027;
+        public static final int results_detail_display=0x7f090012;
+        public static final int results_detail_page_label=0x7f090010;
+        public static final int results_page_label=0x7f090013;
+        public static final int results_table=0x7f090016;
+        public static final int root_button=0x7f09002c;
+        public static final int root_title=0x7f09002b;
         public static final int settings_button=0x7f09000e;
-        public static final int settings_frequency_button=0x7f090018;
-        public static final int settings_frequency_button_minus=0x7f090017;
-        public static final int settings_frequency_button_plus=0x7f090019;
-        public static final int settings_max_duration_button=0x7f090020;
-        public static final int settings_max_duration_button_minus=0x7f09001f;
-        public static final int settings_max_duration_button_plus=0x7f090021;
-        public static final int settings_max_duration_label=0x7f09001e;
-        public static final int settings_number_of_destinations_button=0x7f09001c;
-        public static final int settings_number_of_destinations_button_minus=0x7f09001b;
-        public static final int settings_number_of_destinations_button_plus=0x7f09001d;
-        public static final int settings_number_of_destinations_label=0x7f09001a;
-        public static final int settings_page_label=0x7f090010;
-        public static final int settings_status_button=0x7f090015;
+        public static final int settings_frequency_button=0x7f09001c;
+        public static final int settings_frequency_button_minus=0x7f09001b;
+        public static final int settings_frequency_button_plus=0x7f09001d;
+        public static final int settings_max_duration_button=0x7f090024;
+        public static final int settings_max_duration_button_minus=0x7f090023;
+        public static final int settings_max_duration_button_plus=0x7f090025;
+        public static final int settings_max_duration_label=0x7f090022;
+        public static final int settings_number_of_destinations_button=0x7f090020;
+        public static final int settings_number_of_destinations_button_minus=0x7f09001f;
+        public static final int settings_number_of_destinations_button_plus=0x7f090021;
+        public static final int settings_number_of_destinations_label=0x7f09001e;
+        public static final int settings_page_label=0x7f090017;
+        public static final int settings_status_button=0x7f090019;
         public static final int status_button=0x7f090005;
-        public static final int status_label=0x7f090014;
-        public static final int status_text=0x7f09002a;
-        public static final int subtitle=0x7f090026;
+        public static final int status_label=0x7f090018;
+        public static final int status_text=0x7f09002e;
+        public static final int subtitle=0x7f09002a;
         public static final int textView1=0x7f090000;
-        public static final int title=0x7f090025;
-        public static final int view_logs_mode_button=0x7f090012;
-        public static final int view_middleboxes_mode_button=0x7f090011;
+        public static final int title=0x7f090029;
+        public static final int view_logs_mode_button=0x7f090015;
+        public static final int view_middleboxes_mode_button=0x7f090014;
     }
     public static final class layout {
         public static final int activity_about=0x7f030000;
         public static final int activity_destinations=0x7f030001;
         public static final int activity_main=0x7f030002;
-        public static final int activity_results=0x7f030003;
-        public static final int activity_settings=0x7f030004;
-        public static final int destination_row=0x7f030005;
-        public static final int installation_activity=0x7f030006;
-        public static final int settings_activity=0x7f030007;
+        public static final int activity_result_detail=0x7f030003;
+        public static final int activity_results=0x7f030004;
+        public static final int activity_settings=0x7f030005;
+        public static final int destination_row=0x7f030006;
+        public static final int installation_activity=0x7f030007;
+        public static final int settings_activity=0x7f030008;
     }
     public static final class menu {
         public static final int about=0x7f080000;
         public static final int destinations=0x7f080001;
         public static final int main=0x7f080002;
-        public static final int results=0x7f080003;
-        public static final int settings=0x7f080004;
+        public static final int result_detail=0x7f080003;
+        public static final int results=0x7f080004;
+        public static final int settings=0x7f080005;
     }
     public static final class string {
         /**  ABOUT page 
          */
-        public static final int about_text=0x7f060029;
-        public static final int about_website_button=0x7f06002a;
-        public static final int action_settings=0x7f06002c;
-        public static final int api_prefix=0x7f060026;
-        public static final int busybox_url=0x7f060027;
-        public static final int busybox_version=0x7f060028;
+        public static final int about_text=0x7f06002b;
+        public static final int about_website_button=0x7f06002c;
+        public static final int action_settings=0x7f06002e;
+        public static final int api_prefix=0x7f060028;
+        public static final int busybox_url=0x7f060029;
+        public static final int busybox_version=0x7f06002a;
         public static final int destinations_number=0x7f060020;
         public static final int destinations_page_about_destinations_button=0x7f060021;
         public static final int destinations_page_add_button=0x7f06001f;
@@ -109,6 +115,7 @@ public final class R {
         /**  Destinations page 
          */
         public static final int destinations_page_title=0x7f06001a;
+        public static final int hello_world=0x7f060033;
         public static final int installation_busybox_button=0x7f060006;
         public static final int installation_confirmation_button=0x7f060008;
         public static final int installation_root_button=0x7f060005;
@@ -138,7 +145,11 @@ public final class R {
         public static final int main_status_online_button=0x7f060010;
         /**  Settings stuff 
          */
-        public static final int preferences_file=0x7f060025;
+        public static final int preferences_file=0x7f060027;
+        /**  Results detail 
+         */
+        public static final int results_detail_page_export_button=0x7f060025;
+        public static final int results_detail_page_export_title=0x7f060026;
         public static final int results_logs_button=0x7f060024;
         public static final int results_middleboxes_button=0x7f060023;
         /**  Results page 
@@ -151,10 +162,11 @@ public final class R {
          */
         public static final int settings_page_title=0x7f060015;
         public static final int settings_status_title=0x7f060016;
-        public static final int title_activity_about=0x7f06002f;
-        public static final int title_activity_destinations=0x7f06002d;
-        public static final int title_activity_results=0x7f06002e;
-        public static final int title_activity_settings=0x7f06002b;
+        public static final int title_activity_about=0x7f060031;
+        public static final int title_activity_destinations=0x7f06002f;
+        public static final int title_activity_result_detail=0x7f060032;
+        public static final int title_activity_results=0x7f060030;
+        public static final int title_activity_settings=0x7f06002d;
     }
     public static final class style {
         /** 
