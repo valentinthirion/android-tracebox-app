@@ -51,7 +51,7 @@ public class APIPoster {
 	{
 		// Get the XML representation
 		this.getPostXML();
-		System.out.println(xml);
+		//System.out.println(xml);
 
 		// Write the XML in a txt file
 		try {
@@ -124,6 +124,7 @@ public class APIPoster {
 		// Get the XML representation
 		if (xml == null)
 			this.getPostXML();
+		System.out.println(xml);
 
 		HttpURLConnection connection;
 	    OutputStreamWriter request = null;

@@ -38,11 +38,13 @@ public class Probe {
 		setRouters(new Vector<Router>());
 
 		startDate = new Date();
+		System.out.println(startDate.toString());
 	}
 
 	public void endProbe()
 	{
 		endDate = new Date();
+		System.out.println(endDate.toString());
 	}
 
 	public String toString()

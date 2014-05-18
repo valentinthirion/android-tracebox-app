@@ -47,7 +47,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_PROBE_DATE = "date";
     private static final String KEY_NB_HOPS = "nb_hops";
     private static final String KEY_NB_PM = "nb_pm";
-    private static final String KEY_PROBE_STRING = "probe_string";
+    //private static final String KEY_PROBE_STRING = "probe_string";
     // Logs Table Columns names
     private static final String KEY_MESSAGE = "message";
     private static final String KEY_DATE = "date";
@@ -73,8 +73,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_DESTINATION_ID + " INT, "
                 + KEY_PROBE_DATE + " LONGINT, "
                 + KEY_NB_HOPS + " INT, "
-                + KEY_NB_PM + " INT, "
-                + KEY_PROBE_STRING + " TEXT)";
+                + KEY_NB_PM + " INT, )";
+                //+ KEY_PROBE_STRING + " TEXT)";
         db.execSQL(CREATE_PROBES_TABLE);
 
         // Logs
@@ -159,7 +159,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Get a destination by id
     public Destination getDestination(int id)
     {
-    	System.out.println("ID to fetch : " + id);
         SQLiteDatabase db = this.getReadableDatabase();
  
         Cursor cursor = db.query(TABLE_DESTINATIONS, new String[] { KEY_ID,
@@ -212,7 +211,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_DESTINATION_ID, p.getDestination().getId()); // Date
         values.put(KEY_PROBE_DATE, p.getStartDate().getTime()); // Date
         values.put(KEY_NB_HOPS, p.getRouters().size());
-        values.put(KEY_PROBE_STRING, p.toString());
+        //values.put(KEY_PROBE_STRING, p.toString());
         int nb_pm = 0;
         for (Router r:p.getRouters())
         {

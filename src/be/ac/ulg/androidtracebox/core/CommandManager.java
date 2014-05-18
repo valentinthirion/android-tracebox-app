@@ -68,7 +68,7 @@ public class CommandManager {
 
 			    String seg = new String(buffer, 0, read);
 			    builder.append(seg);
-			    System.out.println(seg);
+			    //System.out.println(seg);
 
 			    if(read < BUFFER_SIZE)
 			    	continue;
