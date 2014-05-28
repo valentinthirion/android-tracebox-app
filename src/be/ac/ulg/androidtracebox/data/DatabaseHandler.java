@@ -73,7 +73,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_DESTINATION_ID + " INT, "
                 + KEY_PROBE_DATE + " LONGINT, "
                 + KEY_NB_HOPS + " INT, "
-                + KEY_NB_PM + " INT, )";
+                + KEY_NB_PM + " INT)";
                 //+ KEY_PROBE_STRING + " TEXT)";
         db.execSQL(CREATE_PROBES_TABLE);
 
