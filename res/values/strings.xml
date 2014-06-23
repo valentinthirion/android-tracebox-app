@@ -41,6 +41,8 @@
     <string name="destinations_page_destination_name">Nom</string>
     <string name="destinations_page_destination_address">IP</string>
     <string name="destinations_page_probe_button">PROBE</string>
+    <string name="destinations_page_proxy_button">PROXY</string>
+    <string name="destinations_page_full_icmp_button">F-ICMP</string>
     <string name="destinations_page_add_button">ADD</string>
     <string name="destinations_number"># of destinations: </string>
     <string name="destinations_page_about_destinations_button">\?</string>

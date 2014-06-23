@@ -12,6 +12,8 @@
 
 package be.ac.ulg.androidtracebox.core;
 
+import java.util.Vector;
+
 import android.content.Context;
 import android.location.Location;
 import be.ac.ulg.androidtracebox.core.MyLocation.LocationResult;
@@ -25,6 +27,7 @@ public class TraceboxUtility
 	private DatabaseHandler db;
 	private float batteryBefore;
 	private Probe probeResult;
+	private int mode;
 
 	public TraceboxUtility(Context c)
 	{
@@ -39,7 +42,7 @@ public class TraceboxUtility
 	public TraceboxUtility(Context c, Destination d)
 	{
 		context = c;
-		destination = d;		
+		destination = d;
 
 		db = new DatabaseHandler(context);
 		batteryBefore = MiscUtilities.getBatteryLevel(context);
@@ -202,11 +205,109 @@ public class TraceboxUtility
 					}
 				}
 			}
-
-			
 		}
 		
 		newProbe.endProbe();
 		return newProbe;
+	}
+
+	public boolean doTraceboxToDetectProxies()
+	{
+		// Create the request
+		String request = "system/xbin/busybox tracebox " + destination.getAddress() + " -sc proxy"; 
+		System.out.println("Request : " + request);
+
+		try {
+			// Execute the request
+			rawResult = CommandManager.executeCommandAsRoot(request);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		// Work on the result and detect if found proxy
+		String[] steps = rawResult.split("\n");
+		for (int i = 0; i < steps.length; i++)
+		{
+			System.out.println(steps[i]);
+			if (steps[i].contains("PROXY DETECTED"))
+				return true;
+			if (steps[i].contains("PROBABLY NO PROXY DETECTED"))
+				return false;
+			else
+				continue;
+		}
+		return false;
+	}
+
+	public Vector<Integer> doTraceboxToDetectFullICMPRouters()
+	{
+		// Create the request
+		String request = "system/xbin/busybox tracebox " + destination.getAddress() + " -sc full_icmp"; 
+		System.out.println("Request : " + request);
+
+		try {
+			// Execute the request
+			rawResult = CommandManager.executeCommandAsRoot(request);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		int routersCount = 0;
+		int fullICMCount = 0;
+
+		// Work on the result and detect if found proxy
+		String[] steps = rawResult.split("\n");
+		for (int i = 0; i < steps.length; i++)
+		{
+			System.out.println(steps[i]);
+			String[] line = steps[i].split("\\s+");
+			int ttl = 0;
+			boolean ttlFound = false;
+			boolean routerFound = false;
+			
+			for (int j = 0; j < line.length; j++)
+			{
+				// TTL
+				try {
+					ttl = Integer.parseInt(line[j]);
+					ttlFound = true;
+					routersCount++;
+					continue;
+				}
+				catch (NumberFormatException e) {
+					//System.out.println(line[j]);
+				}
+
+				// SPACES
+				if (line[j].equals(""))
+					continue;
+
+				// STARS
+				if (line[j].equals("*"))
+					continue;
+
+				// NOT STAR AND HAS TTL
+				if (ttlFound)
+				{
+					// FOUND ROUTER
+					if (!line[j].startsWith("IP") && !line[j].startsWith("TCP") && !routerFound)
+					{
+						routerFound = true;
+						fullICMCount++;
+						break;
+					}
+				}
+			}
+		}
+
+		Vector<Integer> r = new Vector<Integer>();
+		r.add(routersCount);
+		r.add(fullICMCount);
+
+		return r;
 	}
 }

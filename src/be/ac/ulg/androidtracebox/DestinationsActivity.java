@@ -119,9 +119,64 @@ public class DestinationsActivity extends Activity {
 		    nameView.setText(currentDest.getName());
 		    TextView addressView = (TextView) rowView.findViewById(R.id.destination_ip);
 		    addressView.setText(currentDest.getAddress());
+
+		    // Proxy probe button
+		    Button proxyButton = (Button) rowView.findViewById(R.id.destinations_page_proxy_button);
+		    proxyButton.setOnClickListener(new View.OnClickListener() {
+		    	 @Override
+		         public void onClick(View arg0) {
+		    		// Show message
+		    			new AlertDialog.Builder(context)
+		    		    .setTitle("Proxy detection probe")
+		    		    .setMessage("Tracebox is going to detect proxies between you and " + currentDest.getName() + ", you will have to accecpt the SU access in the prompt box.")
+		    		    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+		    		        public void onClick(DialogInterface dialog, int which) {
+
+		    		        	// Launch the prober
+		    		        	TraceboxerInstantProbe prober = (TraceboxerInstantProbe) new TraceboxerInstantProbe(context, currentDest, 1);
+		    					prober.execute();
+
+		    		        	progressDialog = ProgressDialog.show(
+		    		        			context, "Please wait",
+		    	                        "Tracebox is finding proxies to " + currentDest.getName() + "...\nThis could take up to one minute.", true);
+		    	                progressDialog.setCancelable(false);
+		    		        }
+		    		     })
+		    		     .show();
+		    	 }
+		    	
+		    });
+
+		    // Full-ICMP Probe button
+		    Button fullICMP = (Button) rowView.findViewById(R.id.destinations_page_full_icmp_button);
+		    fullICMP.setOnClickListener(new View.OnClickListener() {
+		    	 @Override
+		         public void onClick(View arg0) {
+		    		// Show message
+		    			new AlertDialog.Builder(context)
+		    		    .setTitle("FULL ICMP detection probe")
+		    		    .setMessage("Tracebox is going to detect FULL-ICMP compliant routers between you and " + currentDest.getName() + ", you will have to accecpt the SU access in the prompt box.")
+		    		    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+		    		        public void onClick(DialogInterface dialog, int which) {
+
+		    		        	// Launch the prober
+		    		        	TraceboxerInstantProbe prober = (TraceboxerInstantProbe) new TraceboxerInstantProbe(context, currentDest, 2);
+		    					prober.execute();
+
+		    		        	progressDialog = ProgressDialog.show(
+		    		        			context, "Please wait",
+		    	                        "Tracebox is finding probing " + currentDest.getName() + "...\nThis could take up to one minute.", true);
+		    	                progressDialog.setCancelable(false);
+		    		        }
+		    		     })
+		    		     .show();
+		    	 }
+		    	
+		    });
+
+		    // Simple Probe Button
 		    Button probeButton = (Button) rowView.findViewById(R.id.destinations_page_probe_button);
 		    probeButton.setOnClickListener(new View.OnClickListener() {
-
 	            @Override
 	            public void onClick(View arg0) {
 
@@ -133,7 +188,7 @@ public class DestinationsActivity extends Activity {
 	    		        public void onClick(DialogInterface dialog, int which) {
 
 	    		        	// Launch the prober
-	    		        	TraceboxerInstantProbe prober = (TraceboxerInstantProbe) new TraceboxerInstantProbe(context, currentDest);
+	    		        	TraceboxerInstantProbe prober = (TraceboxerInstantProbe) new TraceboxerInstantProbe(context, currentDest, 0);
 	    					prober.execute();
 
 	    		        	progressDialog = ProgressDialog.show(
@@ -173,44 +228,82 @@ public class DestinationsActivity extends Activity {
 
 	public void endInstantProbe(int probeResult, final Probe p)
 	{
+		stopWheelAndVibrate();
+
+		switch (probeResult)
+		{
+			// NORMAL MODE
+			case 1:
+				new AlertDialog.Builder(this)
+				.setTitle("Great")
+				.setMessage("Your probe has been submitted to the server and will be used for statistics, thank you. To see the detail, click on \"Yes\"")
+				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) { 
+						// Open pop up with result
+						openResultForProbe(p);
+					}
+				})
+				.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) { 
+						// do nothing
+					}
+				})
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.show();
+				break;
+			case 0:
+				break;
+			case -1:
+				showDialogBox("ERROR", "There was an error while the probing. Sorry.");
+				break;
+			case -2:
+				showDialogBox("ERROR", "The probe could not be saved, try again later.");
+				break;
+			case -3:
+				showDialogBox("ERROR", "There was an error while posting the data on the server. Please, try again later");
+				break;
+
+			
+		}
+	}
+
+	private void endProxyProbe(boolean proxy)
+	{
+		stopWheelAndVibrate();
+
+		if (proxy)
+		{
+			showDialogBox("PROXY", "Tracebox detected that there probably is a proxy between you and the destination");
+		}
+		else
+		{
+			showDialogBox("PROXY", "Tracebox detected that there is no proxy between you and the destination");
+		}
+	}
+
+	private void endFullICMPProbe(Vector<Integer> result)
+	{
+		stopWheelAndVibrate();
+
+		if ((result == null) || (result.size() < 2))
+			showDialogBox("ERROR", "Tracebox detected that there probably is a proxy between you and the destination");
+		else
+		{
+			int tot = result.elementAt(0);
+			int fI = result.elementAt(1);
+					
+			showDialogBox("FULL-ICMP", "Tracebox detected that "+ fI
+					+ " routers on " + tot
+					+ " are RFC1812 compliant and quote the entire sent packet inside the ICMP message." );
+		}
+	}
+
+	private void stopWheelAndVibrate()
+	{
 		progressDialog.cancel();
 
 		Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		v.vibrate(500); // Vibrate for 500 milliseconds
-
-		switch (probeResult)
-		{
-		case 1:
-			new AlertDialog.Builder(this)
-		    .setTitle("Great")
-		    .setMessage("Your probe has been submitted to the server and will be used for statistics, thank you. To see the detail, click on \"Yes\"")
-		    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int which) { 
-		        	// Open pop up with result
-		        	openResultForProbe(p);
-		        }
-		     })
-		    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int which) { 
-		            // do nothing
-		        }
-		     })
-		    .setIcon(android.R.drawable.ic_dialog_alert)
-		     .show();
-
-			break;
-		case 0:
-			break;
-		case -1:
-			showDialogBox("ERROR", "There was an error while the probing. Sorry.");
-			break;
-		case -2:
-			showDialogBox("ERROR", "The probe could not be saved, try again later.");
-			break;
-		case -3:
-			showDialogBox("ERROR", "There was an error while posting the data on the server. Please, try again later");
-			break;
-		}
 	}
 
 	private void openResultForProbe(Probe p)
@@ -353,26 +446,41 @@ public class DestinationsActivity extends Activity {
 		private Context context;
 		private TraceboxUtility tracebox;
 		private Destination destination;
+		private int mode;
+		private boolean proxyProbeResult;
+		private Vector<Integer> fullICMPResult;
 
-		public TraceboxerInstantProbe (final Context c, final Destination d)
+		public TraceboxerInstantProbe (final Context c, final Destination d, int m) // normal : mode == 0, proxy : mode == 1, full_icmp : mode == 2
 		{
 	        super();
 	        context = c;
 	        destination = d;
+	        mode = m;
 	        tracebox = new TraceboxUtility(context, destination);
 	    }
 
 		@Override
 		protected Long doInBackground(URL... params)
 		{
-			probeResult = tracebox.doTraceboxAndPost();
+			if (mode == 0)
+				probeResult = tracebox.doTraceboxAndPost();
+			else if (mode == 1)
+				proxyProbeResult = tracebox.doTraceboxToDetectProxies();
+			else if (mode == 2)
+				fullICMPResult = tracebox.doTraceboxToDetectFullICMPRouters();
+			
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Long result)
 		{
-			endInstantProbe(probeResult, tracebox.getProbe());				
+			if (mode == 0)
+				endInstantProbe(probeResult, tracebox.getProbe());
+			else if (mode == 1)
+				endProxyProbe(proxyProbeResult);
+			else if (mode == 2)
+				endFullICMPProbe(fullICMPResult);
 		}
 	}
 }

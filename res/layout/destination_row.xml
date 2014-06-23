@@ -37,12 +37,40 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/destinations_page_proxy_button"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="5dp"
+            android:background="#2c3e50"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="@string/destinations_page_proxy_button"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/destinations_page_full_icmp_button"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="5dp"
+            android:background="#2c3e50"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="@string/destinations_page_full_icmp_button"
+            android:textColor="#FFFFFF" />
+
+        <Button
             android:id="@+id/destinations_page_probe_button"
             android:layout_width="70dp"
             android:layout_height="40dp"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:layout_marginTop="5dp"
             android:background="#2c3e50"
             android:paddingLeft="2dp"
